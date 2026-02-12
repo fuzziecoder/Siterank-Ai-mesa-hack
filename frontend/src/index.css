@@ -21,61 +21,31 @@ code, .font-mono {
 
 @layer base {
     :root {
-        --background: 210 40% 98%;
-        --foreground: 222 47% 11%;
-        --card: 0 0% 100%;
-        --card-foreground: 222 47% 11%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 222 47% 11%;
-        --primary: 217 100% 50%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 210 40% 96%;
-        --secondary-foreground: 222 47% 11%;
-        --muted: 210 40% 96%;
-        --muted-foreground: 215 16% 47%;
-        --accent: 210 40% 96%;
-        --accent-foreground: 222 47% 11%;
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 214 32% 91%;
-        --input: 214 32% 91%;
-        --ring: 217 100% 50%;
-        --chart-1: 217 100% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
-        --chart-4: 280 65% 60%;
-        --chart-5: 340 75% 55%;
-        --radius: 0.5rem;
-        
-        --success: 160 84% 39%;
-        --warning: 38 92% 50%;
-        --info: 217 91% 60%;
-    }
-    .dark {
-        --background: 222 47% 11%;
-        --foreground: 210 40% 98%;
-        --card: 217 33% 17%;
-        --card-foreground: 210 40% 98%;
-        --popover: 217 33% 17%;
-        --popover-foreground: 210 40% 98%;
-        --primary: 217 100% 50%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 217 33% 17%;
+        --background: 224 71% 4%;
+        --foreground: 213 31% 91%;
+        --card: 224 71% 4%;
+        --card-foreground: 213 31% 91%;
+        --popover: 224 71% 4%;
+        --popover-foreground: 213 31% 91%;
+        --primary: 210 40% 98%;
+        --primary-foreground: 222 47% 11%;
+        --secondary: 222 47% 11%;
         --secondary-foreground: 210 40% 98%;
-        --muted: 217 33% 17%;
+        --muted: 223 47% 11%;
         --muted-foreground: 215 20% 65%;
-        --accent: 217 33% 17%;
+        --accent: 216 34% 17%;
         --accent-foreground: 210 40% 98%;
-        --destructive: 0 62% 30%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 217 33% 17%;
-        --input: 217 33% 17%;
-        --ring: 217 100% 50%;
+        --destructive: 0 63% 31%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 216 34% 17%;
+        --input: 216 34% 17%;
+        --ring: 216 34% 17%;
         --chart-1: 220 70% 50%;
         --chart-2: 160 60% 45%;
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
+        --radius: 0.5rem;
     }
 }
 
@@ -88,7 +58,7 @@ code, .font-mono {
     }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar for dark theme */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -142,29 +112,7 @@ code, .font-mono {
 .stagger-3 { animation-delay: 0.3s; }
 .stagger-4 { animation-delay: 0.4s; }
 
-/* Noise texture overlay */
-.noise-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.03;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* Score circle gradient */
-.score-ring {
-    background: conic-gradient(
-        hsl(var(--primary)) var(--score-percent, 0%),
-        hsl(var(--muted)) var(--score-percent, 0%)
-    );
-}
-
-/* Glass morphism */
+/* Glass morphism for dark theme */
 .glass {
     background: hsl(var(--background) / 0.8);
     backdrop-filter: blur(12px);
@@ -174,31 +122,5 @@ code, .font-mono {
 @layer base {
     [data-debug-wrapper="true"] {
         display: contents !important;
-    }
-
-    [data-debug-wrapper="true"] > * {
-        margin-left: inherit;
-        margin-right: inherit;
-        margin-top: inherit;
-        margin-bottom: inherit;
-        padding-left: inherit;
-        padding-right: inherit;
-        padding-top: inherit;
-        padding-bottom: inherit;
-        column-gap: inherit;
-        row-gap: inherit;
-        gap: inherit;
-        border-left-width: inherit;
-        border-right-width: inherit;
-        border-top-width: inherit;
-        border-bottom-width: inherit;
-        border-left-style: inherit;
-        border-right-style: inherit;
-        border-top-style: inherit;
-        border-bottom-style: inherit;
-        border-left-color: inherit;
-        border-right-color: inherit;
-        border-top-color: inherit;
-        border-bottom-color: inherit;
     }
 }
