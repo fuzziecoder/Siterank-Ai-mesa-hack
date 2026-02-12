@@ -275,6 +275,26 @@ export default function AnalyzePage() {
                   Add Competitor
                 </Button>
               )}
+
+              {/* Industry Insights from Auto-Detect */}
+              {industryInsights && (
+                <div className="mt-4 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
+                    <span className="text-sm font-medium text-emerald-400">AI Industry Insights</span>
+                  </div>
+                  {industryInsights.industry && (
+                    <p className="text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">Industry:</span> {industryInsights.industry}
+                    </p>
+                  )}
+                  {industryInsights.market_position && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      <span className="font-medium text-foreground">Position:</span> {industryInsights.market_position}
+                    </p>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 
