@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { User, LogOut, BarChart3, History, Search, Menu, X } from 'lucide-react';
+import { User, LogOut, BarChart3, History, Search, Menu, X, Plus } from 'lucide-react';
 import Logo from './Logo';
 import ShinyText from './ShinyText';
 
@@ -29,62 +29,49 @@ export const Navbar = () => {
     navigate('/');
   };
 
-  const navItems = isAuthenticated 
-    ? [
-        { 
-          label: 'Dashboard', 
-          href: '/dashboard',
-          bgColor: '#0D0716',
-          links: []
-        },
-        { 
-          label: 'Analyze', 
-          href: '/analyze',
-          bgColor: '#170D27',
-          links: []
-        },
-        { 
-          label: 'History', 
-          href: '/history',
-          bgColor: '#271E37',
-          links: []
-        }
+  // Main navigation items (same for both authenticated and non-authenticated)
+  const mainNavItems = [
+    {
+      label: 'Features',
+      bgColor: '#0D0716',
+      textColor: '#fff',
+      links: [
+        { label: 'SEO Analysis', href: '/analyze', ariaLabel: 'SEO Analysis' },
+        { label: 'Speed Metrics', href: '/analyze', ariaLabel: 'Speed Metrics' },
+        { label: 'Content Score', href: '/analyze', ariaLabel: 'Content Score' },
       ]
-    : [
-        {
-          label: 'Features',
-          bgColor: '#0D0716',
-          textColor: '#fff',
-          links: [
-            { label: 'SEO Analysis', href: '#', ariaLabel: 'SEO Analysis' },
-            { label: 'Speed Metrics', href: '#', ariaLabel: 'Speed Metrics' },
-            { label: 'Content Score', href: '#', ariaLabel: 'Content Score' },
-          ]
-        },
-        {
-          label: 'Solutions',
-          bgColor: '#170D27',
-          textColor: '#fff',
-          links: [
-            { label: 'For Marketers', href: '#', ariaLabel: 'For Marketers' },
-            { label: 'For Agencies', href: '#', ariaLabel: 'For Agencies' },
-            { label: 'For Enterprise', href: '#', ariaLabel: 'For Enterprise' },
-          ]
-        },
-        {
-          label: 'Resources',
-          bgColor: '#271E37',
-          textColor: '#fff',
-          links: [
-            { label: 'Blog', href: '#', ariaLabel: 'Blog' },
-            { label: 'Documentation', href: '#', ariaLabel: 'Documentation' },
-            { label: 'Support', href: '#', ariaLabel: 'Support' },
-          ]
-        }
-      ];
+    },
+    {
+      label: 'Solutions',
+      bgColor: '#170D27',
+      textColor: '#fff',
+      links: [
+        { label: 'For Marketers', href: '/analyze', ariaLabel: 'For Marketers' },
+        { label: 'For Agencies', href: '/analyze', ariaLabel: 'For Agencies' },
+        { label: 'For Enterprise', href: '/analyze', ariaLabel: 'For Enterprise' },
+      ]
+    },
+    {
+      label: 'Resources',
+      bgColor: '#271E37',
+      textColor: '#fff',
+      links: [
+        { label: 'Blog', href: '#', ariaLabel: 'Blog' },
+        { label: 'Documentation', href: '#', ariaLabel: 'Documentation' },
+        { label: 'Support', href: '#', ariaLabel: 'Support' },
+      ]
+    }
+  ];
+
+  // Authenticated user quick links
+  const authNavItems = [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Analyze', href: '/analyze' },
+    { label: 'History', href: '/history' },
+  ];
 
   useLayoutEffect(() => {
-    if (isOpen && !isAuthenticated) {
+    if (isOpen) {
       gsap.to(menuRef.current, {
         height: 'auto',
         opacity: 1,
@@ -104,7 +91,7 @@ export const Navbar = () => {
         ease: 'power3.out',
       });
     }
-  }, [isOpen, isAuthenticated]);
+  }, [isOpen]);
 
   const handleCardHover = (index) => {
     setHoveredItem(index);
@@ -131,7 +118,7 @@ export const Navbar = () => {
   return (
     <>
       {/* Overlay */}
-      {isOpen && !isAuthenticated && (
+      {isOpen && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
           onClick={() => setIsOpen(false)}
@@ -140,53 +127,53 @@ export const Navbar = () => {
 
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border" data-testid="navbar">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-3" data-testid="logo-link">
-              <Logo size="lg" circular />
-              <span className="font-bold text-lg tracking-tight hidden sm:block" style={{ fontFamily: "'Zen Dots', cursive" }}>
+          <div className="flex items-center justify-between h-20">
+            {/* Logo - Increased size */}
+            <Link to="/" className="flex items-center gap-4" data-testid="logo-link">
+              <Logo size="xl" circular />
+              <span className="font-bold text-xl tracking-tight hidden sm:block" style={{ fontFamily: "'Zen Dots', cursive" }}>
                 <ShinyText 
                   text="SITERANK AI" 
                   speed={3} 
                   color="#9ca3af" 
                   shineColor="#e5e7eb"
-                  spread={100}
+                  spread={120}
                 />
               </span>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
-              {isAuthenticated ? (
-                // Authenticated nav items
-                navItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      location.pathname === item.href
-                        ? 'text-foreground bg-muted'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                    }`}
-                    data-testid={`nav-${item.label.toLowerCase()}`}
-                  >
-                    {item.label}
-                  </Link>
-                ))
-              ) : (
-                // Non-authenticated nav items with hover dropdown
-                navItems.map((item, index) => (
-                  <button
-                    key={item.label}
-                    onMouseEnter={() => {
-                      setIsOpen(true);
-                      setHoveredItem(index);
-                    }}
-                    className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
-                  >
-                    {item.label}
-                  </button>
-                ))
+              {/* Main nav items with dropdown */}
+              {mainNavItems.map((item, index) => (
+                <button
+                  key={item.label}
+                  onMouseEnter={() => setIsOpen(true)}
+                  className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
+                >
+                  {item.label}
+                </button>
+              ))}
+              
+              {/* Authenticated quick links */}
+              {isAuthenticated && (
+                <>
+                  <div className="w-px h-6 bg-border mx-2" />
+                  {authNavItems.map((item) => (
+                    <Link
+                      key={item.label}
+                      to={item.href}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                        location.pathname === item.href
+                          ? 'text-foreground bg-muted'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                      }`}
+                      data-testid={`nav-${item.label.toLowerCase()}`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </>
               )}
             </div>
 
@@ -196,16 +183,16 @@ export const Navbar = () => {
                 <>
                   <Link to="/analyze" className="hidden sm:block">
                     <Button size="sm" className="rounded-full gap-2 bg-gray-700 hover:bg-gray-600" data-testid="new-analysis-btn">
-                      <Search className="w-4 h-4" />
-                      Analyze
+                      <Plus className="w-4 h-4" />
+                      New Analysis
                     </Button>
                   </Link>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="rounded-full" data-testid="user-menu-btn">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 p-0.5">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 p-0.5">
                           <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
-                            <User className="w-4 h-4 text-gray-400" />
+                            <User className="w-5 h-5 text-gray-400" />
                           </div>
                         </div>
                       </Button>
@@ -260,81 +247,90 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Dropdown Menu for non-authenticated */}
-        {!isAuthenticated && (
-          <div
-            ref={menuRef}
-            className="absolute left-0 right-0 overflow-hidden h-0 opacity-0 bg-background border-b border-border"
-            onMouseLeave={() => setIsOpen(false)}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {navItems.map((item, index) => (
-                  <div
-                    key={item.label}
-                    ref={(el) => (cardsRef.current[index] = el)}
-                    onMouseEnter={() => handleCardHover(index)}
-                    onMouseLeave={() => handleCardLeave(index)}
-                    className="rounded-2xl p-6 transition-all cursor-pointer"
-                    style={{
-                      backgroundColor: item.bgColor,
-                      color: item.textColor,
-                    }}
-                  >
-                    <h3 className="text-lg font-semibold mb-4">{item.label}</h3>
-                    <div className="space-y-1">
-                      {item.links?.map((link) => (
-                        <a
-                          key={link.label}
-                          href={link.href}
-                          aria-label={link.ariaLabel}
-                          className="group flex items-center justify-between py-3 px-4 rounded-lg hover:bg-white/10 transition-colors"
-                        >
-                          <span className="text-sm font-medium">{link.label}</span>
-                          <GoArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </a>
-                      ))}
-                    </div>
+        {/* Dropdown Menu - Always available */}
+        <div
+          ref={menuRef}
+          className="absolute left-0 right-0 overflow-hidden h-0 opacity-0 bg-background border-b border-border"
+          onMouseLeave={() => setIsOpen(false)}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {mainNavItems.map((item, index) => (
+                <div
+                  key={item.label}
+                  ref={(el) => (cardsRef.current[index] = el)}
+                  onMouseEnter={() => handleCardHover(index)}
+                  onMouseLeave={() => handleCardLeave(index)}
+                  className="rounded-2xl p-6 transition-all"
+                  style={{
+                    backgroundColor: item.bgColor,
+                    color: item.textColor,
+                  }}
+                >
+                  <h3 className="text-lg font-semibold mb-4">{item.label}</h3>
+                  <div className="space-y-1">
+                    {item.links?.map((link) => (
+                      <Link
+                        key={link.label}
+                        to={link.href}
+                        aria-label={link.ariaLabel}
+                        onClick={() => setIsOpen(false)}
+                        className="group flex items-center justify-between py-3 px-4 rounded-lg hover:bg-white/10 transition-colors"
+                      >
+                        <span className="text-sm font-medium">{link.label}</span>
+                        <GoArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </Link>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-        )}
+        </div>
 
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden border-t border-border bg-background">
             <div className="px-4 py-4 space-y-2">
+              {/* Main nav items for mobile */}
+              {mainNavItems.map((item) => (
+                <div key={item.label} className="mb-4">
+                  <p className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{item.label}</p>
+                  {item.links.map((link) => (
+                    <Link
+                      key={link.label}
+                      to={link.href}
+                      className="block px-4 py-2 rounded-lg text-sm font-medium hover:bg-muted"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+              
+              {/* Auth specific mobile links */}
               {isAuthenticated ? (
                 <>
-                  <Link
-                    to="/dashboard"
-                    className="block px-4 py-3 rounded-lg text-sm font-medium hover:bg-muted"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="/analyze"
-                    className="block px-4 py-3 rounded-lg text-sm font-medium hover:bg-muted"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    New Analysis
-                  </Link>
-                  <Link
-                    to="/history"
-                    className="block px-4 py-3 rounded-lg text-sm font-medium hover:bg-muted"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    History
-                  </Link>
+                  <div className="border-t border-border pt-4 mt-4">
+                    <p className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Quick Actions</p>
+                    {authNavItems.map((item) => (
+                      <Link
+                        key={item.label}
+                        to={item.href}
+                        className="block px-4 py-2 rounded-lg text-sm font-medium hover:bg-muted"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
                 </>
               ) : (
-                <>
+                <div className="border-t border-border pt-4 mt-4 space-y-2">
                   <Link
                     to="/login"
-                    className="block px-4 py-3 rounded-lg text-sm font-medium hover:bg-muted"
+                    className="block px-4 py-3 rounded-lg text-sm font-medium hover:bg-muted text-center"
                     onClick={() => setIsOpen(false)}
                   >
                     Login
@@ -346,7 +342,7 @@ export const Navbar = () => {
                   >
                     Get Started
                   </Link>
-                </>
+                </div>
               )}
             </div>
           </div>
