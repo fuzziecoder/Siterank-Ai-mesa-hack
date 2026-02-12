@@ -431,8 +431,8 @@ export default function AnalysisResultPage() {
                   { label: 'Content', score: scores.content_score, icon: FileText },
                   { label: 'UX', score: scores.ux_score, icon: Layout }
                 ].map(item => (
-                  <div key={item.label} className="text-center p-4 rounded-lg bg-muted/50">
-                    <item.icon className="w-5 h-5 mx-auto text-muted-foreground mb-2" />
+                  <div key={item.label} className="text-center p-4 rounded-lg bg-muted">
+                    <item.icon className="w-5 h-5 mx-auto text-gray-400 mb-2" />
                     <p className={`text-2xl font-bold ${getScoreColor(item.score)}`}>{item.score}</p>
                     <p className="text-xs text-muted-foreground mt-1">{item.label}</p>
                     <Progress value={item.score} className="h-1 mt-2" />
