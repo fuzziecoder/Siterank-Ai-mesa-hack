@@ -12,14 +12,7 @@
         <!-- METAMASK/EXTENSION ERROR SUPPRESSION - Must run first -->
         <script>
             (function() {
-                // Block MetaMask from connecting
-                Object.defineProperty(window, 'ethereum', {
-                    get: function() { return undefined; },
-                    set: function() { return true; },
-                    configurable: false
-                });
-                
-                // Suppress extension errors
+                // Suppress extension errors - don't redefine ethereum as it may already exist
                 window.addEventListener('error', function(e) {
                     if (e.message && (e.message.includes('MetaMask') || e.message.includes('Failed to connect'))) {
                         e.stopImmediatePropagation();
