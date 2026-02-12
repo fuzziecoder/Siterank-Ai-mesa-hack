@@ -3,8 +3,9 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { 
   BarChart3, Search, Zap, Target, TrendingUp, 
-  CheckCircle2, ArrowRight, Globe, Shield, Clock
+  ArrowRight, Globe, Shield, Clock
 } from 'lucide-react';
+import ShinyText from '../components/ShinyText';
 
 const features = [
   {
@@ -220,13 +221,21 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-bold">SiteScan Pro</span>
+              <span className="font-bold" style={{ fontFamily: "'Zen Dots', cursive" }}>
+                <ShinyText 
+                  text="SITERANK AI" 
+                  speed={3} 
+                  color="#0055FF" 
+                  shineColor="#60a5fa"
+                  spread={100}
+                />
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2024 SiteScan Pro. AI-powered website competitor analysis.
+              © 2024 SITERANK AI. AI-powered website competitor analysis.
             </p>
           </div>
         </div>
