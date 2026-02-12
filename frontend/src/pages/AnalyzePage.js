@@ -312,7 +312,7 @@ export default function AnalyzePage() {
             <Button 
               type="submit" 
               disabled={loading}
-              className="rounded-full gap-2 min-w-[140px]"
+              className="rounded-full gap-2 min-w-[140px] bg-emerald-600 hover:bg-emerald-500 text-white"
               data-testid="start-analysis-btn"
             >
               {loading ? (
