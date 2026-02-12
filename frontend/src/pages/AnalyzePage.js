@@ -288,15 +288,19 @@ export default function AnalyzePage() {
                       <span className="font-medium text-foreground">Industry:</span>{' '}
                       {typeof industryInsights.industry === 'string' 
                         ? industryInsights.industry 
-                        : industryInsights.industry.category || industryInsights.industry.primary_segment || 'Detected'}
+                        : (industryInsights.industry?.category || industryInsights.industry?.primary_segment || JSON.stringify(industryInsights.industry).slice(0, 100))}
                     </p>
                   )}
                   {industryInsights.market_position && (
                     <p className="text-sm text-muted-foreground mt-1">
                       <span className="font-medium text-foreground">Position:</span>{' '}
                       {typeof industryInsights.market_position === 'string'
-                        ? industryInsights.market_position
-                        : Object.entries(industryInsights.market_position)[0]?.[1]?.slice(0, 150) + '...' || 'Analysis available'}
+                        ? (industryInsights.market_position.length > 200 
+                            ? industryInsights.market_position.slice(0, 200) + '...' 
+                            : industryInsights.market_position)
+                        : (Object.values(industryInsights.market_position)[0] 
+                            ? String(Object.values(industryInsights.market_position)[0]).slice(0, 150) + '...'
+                            : 'Analysis available')}
                     </p>
                   )}
                 </div>
