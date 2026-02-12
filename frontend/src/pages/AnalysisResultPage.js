@@ -619,10 +619,10 @@ export default function AnalysisResultPage() {
           <TabsContent value="details" className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               {/* SEO Details */}
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Globe className="w-5 h-5" />
+                  <CardTitle className="text-lg flex items-center gap-2 text-foreground">
+                    <Globe className="w-5 h-5 text-gray-400" />
                     SEO Details
                   </CardTitle>
                 </CardHeader>
