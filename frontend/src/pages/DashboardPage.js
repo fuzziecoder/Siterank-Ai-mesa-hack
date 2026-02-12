@@ -8,7 +8,7 @@ import {
   ArrowRight, Loader2, AlertCircle, CheckCircle2, Clock
 } from 'lucide-react';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -42,10 +42,10 @@ export default function DashboardPage() {
 
   const getStatusBadge = (status) => {
     const styles = {
-      completed: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-      processing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-      pending: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-      failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+      completed: 'bg-green-900/30 text-green-400',
+      processing: 'bg-blue-900/30 text-blue-400',
+      pending: 'bg-yellow-900/30 text-yellow-400',
+      failed: 'bg-red-900/30 text-red-400'
     };
     const icons = {
       completed: <CheckCircle2 className="w-3 h-3" />,
@@ -66,7 +66,7 @@ export default function DashboardPage() {
     .filter(a => a.status === 'completed' && a.overall_score > 0)
     .slice(0, 7)
     .reverse()
-    .map((a, index) => ({
+    .map((a) => ({
       name: new Date(a.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       score: a.overall_score,
       url: a.user_site_url
@@ -74,19 +74,19 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" data-testid="dashboard-loading">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-background" data-testid="dashboard-loading">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" data-testid="dashboard-page">
+    <div className="min-h-screen bg-background" data-testid="dashboard-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
               Welcome back, {user?.name?.split(' ')[0]}
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -103,57 +103,57 @@ export default function DashboardPage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Card data-testid="stat-total">
+          <Card className="bg-card border-border" data-testid="stat-total">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Total Analyses</p>
-                  <p className="text-3xl font-bold mt-1">{stats?.total_analyses || 0}</p>
+                  <p className="text-3xl font-bold mt-1 text-foreground">{stats?.total_analyses || 0}</p>
                 </div>
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center">
+                  <BarChart3 className="w-6 h-6 text-gray-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card data-testid="stat-completed">
+          <Card className="bg-card border-border" data-testid="stat-completed">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Completed</p>
-                  <p className="text-3xl font-bold mt-1">{stats?.completed_analyses || 0}</p>
+                  <p className="text-3xl font-bold mt-1 text-foreground">{stats?.completed_analyses || 0}</p>
                 </div>
-                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
-                  <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
+                <div className="w-12 h-12 bg-green-900/30 rounded-xl flex items-center justify-center">
+                  <CheckCircle2 className="w-6 h-6 text-green-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card data-testid="stat-avg-score">
+          <Card className="bg-card border-border" data-testid="stat-avg-score">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Avg. Score</p>
-                  <p className="text-3xl font-bold mt-1">{stats?.avg_score || 0}</p>
+                  <p className="text-3xl font-bold mt-1 text-foreground">{stats?.avg_score || 0}</p>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div className="w-12 h-12 bg-blue-900/30 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-blue-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card data-testid="stat-best-score">
+          <Card className="bg-card border-border" data-testid="stat-best-score">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Best Score</p>
-                  <p className="text-3xl font-bold mt-1">{stats?.best_score || 0}</p>
+                  <p className="text-3xl font-bold mt-1 text-foreground">{stats?.best_score || 0}</p>
                 </div>
-                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                <div className="w-12 h-12 bg-purple-900/30 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-purple-400" />
                 </div>
               </div>
             </CardContent>
@@ -162,10 +162,10 @@ export default function DashboardPage() {
 
         {/* Score Trend Chart */}
         {chartData.length > 1 && (
-          <Card className="mb-8" data-testid="score-trend-chart">
+          <Card className="mb-8 bg-card border-border" data-testid="score-trend-chart">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-primary" />
+              <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                <TrendingUp className="w-5 h-5 text-gray-400" />
                 Score Trend
               </CardTitle>
             </CardHeader>
@@ -175,34 +175,33 @@ export default function DashboardPage() {
                   <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#6b7280" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#6b7280" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis 
                       dataKey="name" 
-                      tick={{ fontSize: 12 }}
-                      className="text-muted-foreground"
+                      tick={{ fontSize: 12, fill: '#9ca3af' }}
                     />
                     <YAxis 
                       domain={[0, 100]} 
-                      tick={{ fontSize: 12 }}
-                      className="text-muted-foreground"
+                      tick={{ fontSize: 12, fill: '#9ca3af' }}
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        backgroundColor: '#1f2937',
+                        border: '1px solid #374151',
+                        borderRadius: '8px',
+                        color: '#e5e7eb'
                       }}
-                      formatter={(value, name) => [value, 'Score']}
+                      formatter={(value) => [value, 'Score']}
                       labelFormatter={(label) => `Date: ${label}`}
                     />
                     <Area 
                       type="monotone" 
                       dataKey="score" 
-                      stroke="hsl(var(--primary))" 
+                      stroke="#9ca3af" 
                       strokeWidth={2}
                       fill="url(#scoreGradient)"
                     />
@@ -214,11 +213,11 @@ export default function DashboardPage() {
         )}
 
         {/* Recent Analyses */}
-        <Card data-testid="recent-analyses">
+        <Card className="bg-card border-border" data-testid="recent-analyses">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg font-semibold">Recent Analyses</CardTitle>
+            <CardTitle className="text-lg font-semibold text-foreground">Recent Analyses</CardTitle>
             <Link to="/history">
-              <Button variant="ghost" size="sm" className="gap-1" data-testid="view-all-btn">
+              <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground hover:text-foreground" data-testid="view-all-btn">
                 View All
                 <ArrowRight className="w-4 h-4" />
               </Button>
@@ -228,7 +227,7 @@ export default function DashboardPage() {
             {recentAnalyses.length === 0 ? (
               <div className="text-center py-12">
                 <History className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
-                <h3 className="font-medium mb-2">No analyses yet</h3>
+                <h3 className="font-medium mb-2 text-foreground">No analyses yet</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Start by analyzing your first website
                 </p>
@@ -245,11 +244,11 @@ export default function DashboardPage() {
                   <Link 
                     key={analysis.id}
                     to={`/analysis/${analysis.id}`}
-                    className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                    className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent/50 transition-colors"
                     data-testid={`analysis-item-${analysis.id}`}
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{analysis.user_site_url}</p>
+                      <p className="font-medium truncate text-foreground">{analysis.user_site_url}</p>
                       <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
                         <span>{analysis.competitor_count} competitors</span>
                         <span>•</span>
@@ -259,7 +258,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-4">
                       {analysis.status === 'completed' && (
                         <div className="text-right hidden sm:block">
-                          <p className="text-2xl font-bold">{analysis.overall_score}</p>
+                          <p className="text-2xl font-bold text-foreground">{analysis.overall_score}</p>
                           <p className="text-xs text-muted-foreground">Score</p>
                         </div>
                       )}
