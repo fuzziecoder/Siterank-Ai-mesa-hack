@@ -28,22 +28,17 @@ export default function AnalysisResultPage() {
 
   useEffect(() => {
     fetchAnalysis();
-    
-    // Poll for updates if processing
-    const interval = setInterval(() => {
-      if (analysis?.status === 'processing' || analysis?.status === 'pending') {
-        fetchAnalysis(true);
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, [id]);
 
   useEffect(() => {
+    // Poll for updates if processing
+    let interval;
     if (analysis?.status === 'processing' || analysis?.status === 'pending') {
-      const interval = setInterval(() => fetchAnalysis(true), 5000);
-      return () => clearInterval(interval);
+      interval = setInterval(() => fetchAnalysis(true), 5000);
     }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [analysis?.status]);
 
   const fetchAnalysis = async (silent = false) => {
@@ -55,7 +50,11 @@ export default function AnalysisResultPage() {
       setAnalysis(response.data);
     } catch (error) {
       if (!silent) {
-        toast.error('Failed to load analysis');
+        if (error.response?.status === 401) {
+          toast.error('Session expired. Please login again.');
+        } else {
+          toast.error('Failed to load analysis');
+        }
       }
     } finally {
       setLoading(false);
