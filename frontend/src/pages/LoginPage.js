@@ -40,17 +40,17 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background" data-testid="login-page">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-card border-border">
         <CardHeader className="text-center space-y-4">
           <Link to="/" className="inline-flex items-center justify-center gap-3">
             <Logo size="lg" />
             <span style={{ fontFamily: "'Zen Dots', cursive" }}>
-              <ShinyText text="SITERANK AI" speed={3} color="#0055FF" shineColor="#60a5fa" spread={80} />
+              <ShinyText text="SITERANK AI" speed={3} color="#9ca3af" shineColor="#e5e7eb" spread={80} />
             </span>
           </Link>
           <div>
-            <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-            <CardDescription className="mt-2">
+            <CardTitle className="text-2xl font-bold text-foreground">Welcome Back</CardTitle>
+            <CardDescription className="mt-2 text-muted-foreground">
               Sign in to your account to continue
             </CardDescription>
           </div>
@@ -58,7 +58,7 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-muted-foreground">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -66,11 +66,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                className="bg-muted border-border"
                 data-testid="login-email-input"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-muted-foreground">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -79,6 +80,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
+                  className="bg-muted border-border"
                   data-testid="login-password-input"
                 />
                 <Button
@@ -88,7 +90,7 @@ export default function LoginPage() {
                   className="absolute right-0 top-0 h-full px-3"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-4 h-4 text-muted-foreground" /> : <Eye className="w-4 h-4 text-muted-foreground" />}
                 </Button>
               </div>
             </div>
@@ -110,7 +112,7 @@ export default function LoginPage() {
           </form>
           <div className="mt-6 text-center text-sm">
             <span className="text-muted-foreground">Don't have an account? </span>
-            <Link to="/register" className="text-primary hover:underline font-medium" data-testid="register-link">
+            <Link to="/register" className="text-gray-400 hover:text-foreground font-medium" data-testid="register-link">
               Sign up
             </Link>
           </div>
