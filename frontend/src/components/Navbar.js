@@ -10,6 +10,7 @@ import {
 } from '../components/ui/dropdown-menu';
 import { Search, BarChart3, History, LogOut, User, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import ShinyText from './ShinyText';
 
 export const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -27,10 +28,18 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2" data-testid="logo-link">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
               <BarChart3 className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-bold text-lg tracking-tight hidden sm:block">SiteScan Pro</span>
+            <span className="font-bold text-lg tracking-tight hidden sm:block" style={{ fontFamily: "'Zen Dots', cursive" }}>
+              <ShinyText 
+                text="SITERANK AI" 
+                speed={3} 
+                color="#0055FF" 
+                shineColor="#60a5fa"
+                spread={100}
+              />
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
