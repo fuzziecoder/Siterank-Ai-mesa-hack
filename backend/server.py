@@ -22,6 +22,18 @@ from analyzer import analyze_scraped_data, compare_all
 from llm_engine import generate_ai_suggestions
 from competitor_detector import detect_competitors, get_industry_insights
 
+
+# ==================== Competitor Detection ====================
+
+class CompetitorDetectRequest(BaseModel):
+    user_site_url: str
+    industry_hint: Optional[str] = ""
+
+
+class CompetitorDetectResponse(BaseModel):
+    competitors: List[str]
+    industry_insights: Optional[dict] = None
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
