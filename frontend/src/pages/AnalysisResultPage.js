@@ -232,15 +232,15 @@ export default function AnalysisResultPage() {
   };
 
   const getScoreColor = (score) => {
-    if (score >= 70) return 'text-green-600 dark:text-green-400';
-    if (score >= 50) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-red-600 dark:text-red-400';
+    if (score >= 70) return 'text-green-400';
+    if (score >= 50) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   const getScoreBg = (score) => {
-    if (score >= 70) return 'bg-green-100 dark:bg-green-900/30';
-    if (score >= 50) return 'bg-yellow-100 dark:bg-yellow-900/30';
-    return 'bg-red-100 dark:bg-red-900/30';
+    if (score >= 70) return 'bg-green-900/30';
+    if (score >= 50) return 'bg-yellow-900/30';
+    return 'bg-red-900/30';
   };
 
   if (loading) {
