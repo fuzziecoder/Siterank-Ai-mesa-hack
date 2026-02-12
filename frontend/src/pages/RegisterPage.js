@@ -55,9 +55,12 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
           <Link to="/" className="inline-flex items-center justify-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
               <BarChart3 className="w-6 h-6 text-primary-foreground" />
             </div>
+            <span style={{ fontFamily: "'Zen Dots', cursive" }}>
+              <ShinyText text="SITERANK AI" speed={3} color="#0055FF" shineColor="#60a5fa" spread={80} />
+            </span>
           </Link>
           <div>
             <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
