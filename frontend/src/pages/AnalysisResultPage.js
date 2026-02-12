@@ -486,17 +486,17 @@ export default function AnalysisResultPage() {
               </Card>
 
               {/* Radar Chart */}
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle className="text-lg">Performance Radar</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Performance Radar</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <RadarChart data={radarData}>
-                        <PolarGrid className="stroke-muted" />
-                        <PolarAngleAxis dataKey="metric" tick={{ fontSize: 12 }} />
-                        <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
+                        <PolarGrid stroke="#374151" />
+                        <PolarAngleAxis dataKey="metric" tick={{ fontSize: 12, fill: '#9ca3af' }} />
+                        <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10, fill: '#9ca3af' }} />
                         {comparisonData.map((site, i) => (
                           <Radar
                             key={site.name}
