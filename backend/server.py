@@ -20,6 +20,7 @@ from auth import hash_password, verify_password, create_access_token, get_curren
 from scraper import scrape_website
 from analyzer import analyze_scraped_data, compare_all
 from llm_engine import generate_ai_suggestions
+from competitor_detector import detect_competitors, get_industry_insights
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
