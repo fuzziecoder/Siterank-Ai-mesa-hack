@@ -11,7 +11,7 @@ export const Logo = ({ className, size = 'default' }) => {
 
   return (
     <img 
-      src="https://customer-assets.emergentagent.com/job_fa09b28c-310a-426e-b85f-18054a70d8a1/artifacts/yuu49tcl_image.png"
+      src="https://customer-assets.emergentagent.com/job_companalyzer-1/artifacts/u5ig6v3m_yuu49tcl_image-removebg-preview.png"
       alt="SITERANK AI Logo"
       className={cn(sizes[size], 'object-contain', className)}
     />
