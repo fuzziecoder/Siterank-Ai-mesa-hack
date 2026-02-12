@@ -53,17 +53,17 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background" data-testid="register-page">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-card border-border">
         <CardHeader className="text-center space-y-4">
           <Link to="/" className="inline-flex items-center justify-center gap-3">
             <Logo size="lg" />
             <span style={{ fontFamily: "'Zen Dots', cursive" }}>
-              <ShinyText text="SITERANK AI" speed={3} color="#0055FF" shineColor="#60a5fa" spread={80} />
+              <ShinyText text="SITERANK AI" speed={3} color="#9ca3af" shineColor="#e5e7eb" spread={80} />
             </span>
           </Link>
           <div>
-            <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-            <CardDescription className="mt-2">
+            <CardTitle className="text-2xl font-bold text-foreground">Create Account</CardTitle>
+            <CardDescription className="mt-2 text-muted-foreground">
               Start analyzing your competitors today
             </CardDescription>
           </div>
@@ -71,7 +71,7 @@ export default function RegisterPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="text-muted-foreground">Full Name</Label>
               <Input
                 id="name"
                 type="text"
@@ -79,11 +79,12 @@ export default function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={loading}
+                className="bg-muted border-border"
                 data-testid="register-name-input"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-muted-foreground">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -91,11 +92,12 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                className="bg-muted border-border"
                 data-testid="register-email-input"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-muted-foreground">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -104,6 +106,7 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
+                  className="bg-muted border-border"
                   data-testid="register-password-input"
                 />
                 <Button
@@ -113,12 +116,12 @@ export default function RegisterPage() {
                   className="absolute right-0 top-0 h-full px-3"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-4 h-4 text-muted-foreground" /> : <Eye className="w-4 h-4 text-muted-foreground" />}
                 </Button>
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-muted-foreground">Confirm Password</Label>
               <Input
                 id="confirmPassword"
                 type={showPassword ? 'text' : 'password'}
@@ -126,6 +129,7 @@ export default function RegisterPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 disabled={loading}
+                className="bg-muted border-border"
                 data-testid="register-confirm-password-input"
               />
             </div>
@@ -147,7 +151,7 @@ export default function RegisterPage() {
           </form>
           <div className="mt-6 text-center text-sm">
             <span className="text-muted-foreground">Already have an account? </span>
-            <Link to="/login" className="text-primary hover:underline font-medium" data-testid="login-link">
+            <Link to="/login" className="text-gray-400 hover:text-foreground font-medium" data-testid="login-link">
               Sign in
             </Link>
           </div>
