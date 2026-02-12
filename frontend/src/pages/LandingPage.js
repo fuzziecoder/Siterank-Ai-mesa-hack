@@ -45,20 +45,20 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background" />
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/50 via-background to-background" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-24 lg:py-32">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             {/* Hero Content */}
             <div className="lg:col-span-7 space-y-8">
               <div className="space-y-4">
-                <Badge variant="secondary" className="gap-2">
+                <Badge variant="secondary" className="gap-2 bg-accent text-muted-foreground">
                   <Zap className="w-3 h-3" />
                   AI-Powered Analysis
                 </Badge>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground">
                   Outrank Your
-                  <span className="text-primary block">Competitors</span>
+                  <span className="text-gray-400 block">Competitors</span>
                 </h1>
                 <p className="text-lg text-muted-foreground max-w-xl">
                   Analyze your website against competitors with AI-powered insights. 
@@ -83,15 +83,15 @@ export default function LandingPage() {
               {/* Trust indicators */}
               <div className="flex flex-wrap items-center gap-6 pt-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-primary" />
+                  <Shield className="w-4 h-4 text-gray-500" />
                   <span>Secure Analysis</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-primary" />
+                  <Clock className="w-4 h-4 text-gray-500" />
                   <span>Results in Minutes</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-primary" />
+                  <Globe className="w-4 h-4 text-gray-500" />
                   <span>Any Website</span>
                 </div>
               </div>
@@ -99,22 +99,22 @@ export default function LandingPage() {
 
             {/* Hero Visual */}
             <div className="lg:col-span-5 hidden lg:block">
-              <Card className="bg-card/80 backdrop-blur border shadow-2xl">
+              <Card className="bg-card border-border shadow-2xl">
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Your Website Score</span>
-                    <span className="text-3xl font-bold text-primary">81</span>
+                    <span className="text-sm font-medium text-muted-foreground">Your Website Score</span>
+                    <span className="text-3xl font-bold text-foreground">81</span>
                   </div>
                   <div className="space-y-3">
                     {metrics.map((metric) => (
                       <div key={metric.label} className="space-y-1">
                         <div className="flex justify-between text-sm">
-                          <span className="font-medium">{metric.label}</span>
+                          <span className="font-medium text-muted-foreground">{metric.label}</span>
                           <span className="text-muted-foreground">{metric.value}/100</span>
                         </div>
                         <div className="h-2 bg-muted rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-primary rounded-full transition-all duration-1000"
+                            className="h-full bg-gray-500 rounded-full transition-all duration-1000"
                             style={{ width: `${metric.value}%` }}
                           />
                         </div>
@@ -129,10 +129,10 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-24 bg-accent/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-foreground">
               Everything You Need to Win
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -145,14 +145,14 @@ export default function LandingPage() {
             {features.map((feature, index) => (
               <Card 
                 key={feature.title}
-                className="bg-card hover:shadow-lg transition-all duration-300 border hover:border-primary/50"
+                className="bg-card hover:bg-accent/50 transition-all duration-300 border-border"
                 data-testid={`feature-card-${index}`}
               >
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                    <feature.icon className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center">
+                    <feature.icon className="w-6 h-6 text-gray-400" />
                   </div>
-                  <h3 className="text-lg font-semibold">{feature.title}</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>
@@ -167,7 +167,7 @@ export default function LandingPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-foreground">
               How It Works
             </h2>
             <p className="text-lg text-muted-foreground">
@@ -183,8 +183,8 @@ export default function LandingPage() {
             ].map((item, index) => (
               <Card key={item.step} className="text-center border-none shadow-none bg-transparent" data-testid={`step-${index + 1}`}>
                 <CardContent className="space-y-4 pt-6">
-                  <div className="text-5xl font-extrabold text-primary/20">{item.step}</div>
-                  <h3 className="text-xl font-semibold">{item.title}</h3>
+                  <div className="text-5xl font-extrabold text-gray-700">{item.step}</div>
+                  <h3 className="text-xl font-semibold text-foreground">{item.title}</h3>
                   <p className="text-muted-foreground">{item.desc}</p>
                 </CardContent>
               </Card>
@@ -194,9 +194,9 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-primary/5">
+      <section className="py-24 bg-accent/30">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
             Ready to Outrank Your Competition?
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -222,8 +222,8 @@ export default function LandingPage() {
                 <ShinyText 
                   text="SITERANK AI" 
                   speed={3} 
-                  color="#0055FF" 
-                  shineColor="#60a5fa"
+                  color="#9ca3af" 
+                  shineColor="#e5e7eb"
                   spread={100}
                 />
               </span>
