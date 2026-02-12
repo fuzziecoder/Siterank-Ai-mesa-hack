@@ -189,13 +189,38 @@ export default function AnalyzePage() {
           {/* Competitor Websites */}
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2 text-foreground">
-                <Globe className="w-5 h-5 text-muted-foreground" />
-                Competitor Websites
-              </CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Add up to 5 competitor websites to compare against (at least 1 required)
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg flex items-center gap-2 text-foreground">
+                    <Globe className="w-5 h-5 text-muted-foreground" />
+                    Competitor Websites
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground mt-1">
+                    Add up to 5 competitor websites or let AI find them for you
+                  </CardDescription>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAutoDetect}
+                  disabled={loading || autoDetecting}
+                  className="border-emerald-600/50 text-emerald-400 hover:bg-emerald-600/10 hover:text-emerald-300 gap-2"
+                  data-testid="auto-detect-btn"
+                >
+                  {autoDetecting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Detecting...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="w-4 h-4" />
+                      Auto-Detect
+                    </>
+                  )}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {competitorUrls.map((url, index) => (
