@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Plus, Trash2, Loader2, Globe, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Loader2, Globe, AlertCircle, Sparkles, Wand2 } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -17,7 +17,9 @@ export default function AnalyzePage() {
   const [userSiteUrl, setUserSiteUrl] = useState('');
   const [competitorUrls, setCompetitorUrls] = useState(['']);
   const [loading, setLoading] = useState(false);
+  const [autoDetecting, setAutoDetecting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [industryInsights, setIndustryInsights] = useState(null);
 
   const validateUrl = (url) => {
     if (!url) return false;
