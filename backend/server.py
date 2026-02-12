@@ -285,7 +285,15 @@ async def get_analyses(
     """Get list of user's analyses"""
     cursor = db.analyses.find(
         {"user_id": current_user['user_id']},
-        {"_id": 0}
+        {
+            "_id": 0,
+            "id": 1,
+            "user_site_url": 1,
+            "user_site_scores.overall_score": 1,
+            "competitors": 1,
+            "status": 1,
+            "created_at": 1
+        }
     ).sort("created_at", -1).skip(skip).limit(limit)
     
     analyses = await cursor.to_list(length=limit)
