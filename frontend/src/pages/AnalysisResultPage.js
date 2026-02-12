@@ -455,22 +455,23 @@ export default function AnalysisResultPage() {
           <TabsContent value="comparison" className="space-y-6">
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Bar Chart */}
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle className="text-lg">Score Comparison</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Score Comparison</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={barChartData} layout="vertical">
-                        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                        <XAxis type="number" domain={[0, 100]} />
-                        <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 12 }} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <XAxis type="number" domain={[0, 100]} tick={{ fill: '#9ca3af' }} />
+                        <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                         <Tooltip 
                           contentStyle={{ 
-                            backgroundColor: 'hsl(var(--card))',
-                            border: '1px solid hsl(var(--border))',
-                            borderRadius: '8px'
+                            backgroundColor: '#1f2937',
+                            border: '1px solid #374151',
+                            borderRadius: '8px',
+                            color: '#e5e7eb'
                           }}
                         />
                         <Legend />
