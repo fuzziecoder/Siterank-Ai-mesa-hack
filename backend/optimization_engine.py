@@ -15,39 +15,288 @@ async def generate_optimization_blueprint(
     """
     Generate a comprehensive AI-powered optimization blueprint
     """
-    api_key = os.environ.get('EMERGENT_LLM_KEY')
-    if not api_key:
-        logger.error("EMERGENT_LLM_KEY not found")
-        return get_fallback_blueprint(user_scores)
-    
     # Calculate competitor averages
     comp_avg = calculate_competitor_averages(competitors)
     
     # Identify gaps
     gaps = identify_gaps(user_scores, comp_avg)
     
-    # Build context for AI
-    context = build_analysis_context(user_url, user_scores, competitors, gaps, scraped_data)
+    # Generate base blueprint from data
+    blueprint = generate_data_driven_blueprint(user_url, user_scores, comp_avg, gaps, scraped_data)
     
-    prompt = f"""You are an expert website optimization consultant. Analyze this website data and generate a comprehensive optimization blueprint.
+    # Try to enhance with AI
+    api_key = os.environ.get('EMERGENT_LLM_KEY')
+    if api_key:
+        try:
+            enhanced = await enhance_blueprint_with_ai(user_url, user_scores, competitors, gaps, blueprint, api_key)
+            if enhanced:
+                return enhanced
+        except Exception as e:
+            logger.warning(f"AI enhancement failed, using data-driven blueprint: {str(e)}")
+    
+    return blueprint
 
-{context}
 
-Generate an optimization blueprint with the following structure (respond in valid JSON only):
-
-{{
-  "overall_health": {{
-    "score": <0-100>,
-    "status": "<critical/needs_work/good/excellent>",
-    "summary": "<2-3 sentence overview>"
-  }},
-  "critical_fixes": [
-    {{
-      "id": 1,
-      "title": "<fix title>",
-      "category": "<seo/speed/content/ux>",
-      "impact": "<high/critical>",
-      "effort": "<low/medium/high>",
+def generate_data_driven_blueprint(
+    user_url: str,
+    user_scores: Dict[str, Any],
+    comp_avg: Dict[str, float],
+    gaps: Dict[str, float],
+    scraped_data: Dict[str, Any] = None
+) -> Dict[str, Any]:
+    """Generate blueprint based purely on data analysis"""
+    overall = user_scores.get('overall_score', 50)
+    seo = user_scores.get('seo_score', 50)
+    speed = user_scores.get('speed_score', 50)
+    content = user_scores.get('content_score', 50)
+    ux = user_scores.get('ux_score', 50)
+    
+    # Determine status
+    if overall < 40:
+        status = "critical"
+    elif overall < 60:
+        status = "needs_work"
+    elif overall < 80:
+        status = "good"
+    else:
+        status = "excellent"
+    
+    # Build critical fixes based on lowest scores
+    critical_fixes = []
+    score_categories = [
+        ('seo', seo, 'SEO'),
+        ('speed', speed, 'Speed'),
+        ('content', content, 'Content'),
+        ('ux', ux, 'UX')
+    ]
+    
+    # Sort by score (lowest first)
+    score_categories.sort(key=lambda x: x[1])
+    
+    fix_templates = {
+        'seo': [
+            {
+                "title": "Optimize Meta Tags",
+                "description": "Meta title and description need optimization for better search visibility",
+                "fix": "Add unique, keyword-rich title (50-60 chars) and meta description (150-160 chars) with call-to-action",
+                "expected_improvement": "+5-10 SEO points"
+            },
+            {
+                "title": "Add Structured Data",
+                "description": "Missing or incomplete Schema.org markup",
+                "fix": "Implement JSON-LD schema for Organization, WebPage, and relevant content types",
+                "expected_improvement": "+3-5 SEO points"
+            },
+            {
+                "title": "Improve Internal Linking",
+                "description": "Internal link structure needs optimization",
+                "fix": "Add contextual internal links between related pages, use descriptive anchor text",
+                "expected_improvement": "+3-5 SEO points"
+            }
+        ],
+        'speed': [
+            {
+                "title": "Compress Images",
+                "description": "Large images are slowing down page load",
+                "fix": "Convert images to WebP format, resize to display dimensions, enable lazy loading",
+                "expected_improvement": "+10-15 Speed points"
+            },
+            {
+                "title": "Enable Browser Caching",
+                "description": "Resources not being cached effectively",
+                "fix": "Set Cache-Control headers for static assets (1 year for versioned, 1 week for others)",
+                "expected_improvement": "+5-8 Speed points"
+            },
+            {
+                "title": "Minify CSS/JS",
+                "description": "Unminified resources increasing page size",
+                "fix": "Minify and bundle CSS/JavaScript files, defer non-critical scripts",
+                "expected_improvement": "+3-5 Speed points"
+            }
+        ],
+        'content': [
+            {
+                "title": "Expand Content Depth",
+                "description": "Content lacks depth compared to competitors",
+                "fix": "Add 500-1000 more words covering related subtopics, FAQs, and examples",
+                "expected_improvement": "+8-12 Content points"
+            },
+            {
+                "title": "Improve Heading Structure",
+                "description": "Heading hierarchy needs optimization",
+                "fix": "Use one H1, organize content with H2-H3 subheadings, include keywords naturally",
+                "expected_improvement": "+3-5 Content points"
+            },
+            {
+                "title": "Add Visual Content",
+                "description": "Page lacks engaging visual elements",
+                "fix": "Add infographics, charts, or images to break up text and improve engagement",
+                "expected_improvement": "+3-5 Content points"
+            }
+        ],
+        'ux': [
+            {
+                "title": "Improve Mobile Experience",
+                "description": "Mobile usability issues detected",
+                "fix": "Ensure tap targets are 44px+, text is readable without zoom, no horizontal scroll",
+                "expected_improvement": "+5-8 UX points"
+            },
+            {
+                "title": "Optimize Navigation",
+                "description": "Navigation structure could be clearer",
+                "fix": "Simplify menu structure, add breadcrumbs, ensure important pages are 3 clicks away",
+                "expected_improvement": "+3-5 UX points"
+            },
+            {
+                "title": "Enhance CTAs",
+                "description": "Calls-to-action need improvement",
+                "fix": "Make CTAs prominent, use action-oriented text, ensure good contrast",
+                "expected_improvement": "+3-5 UX points"
+            }
+        ]
+    }
+    
+    fix_id = 1
+    for category, score, name in score_categories:
+        if score < 70:
+            impact = "critical" if score < 40 else "high"
+            effort = "low" if category in ['seo', 'content'] else "medium"
+            for template in fix_templates.get(category, [])[:2]:
+                critical_fixes.append({
+                    "id": fix_id,
+                    "title": template["title"],
+                    "category": category,
+                    "impact": impact,
+                    "effort": effort,
+                    "description": template["description"],
+                    "fix": template["fix"],
+                    "expected_improvement": template["expected_improvement"]
+                })
+                fix_id += 1
+                if len(critical_fixes) >= 5:
+                    break
+        if len(critical_fixes) >= 5:
+            break
+    
+    # Generate quick wins
+    quick_wins = [
+        {
+            "id": 1,
+            "title": "Add Missing Alt Tags",
+            "category": "seo",
+            "time_to_implement": "1-2 hours",
+            "description": "Add descriptive alt text to all images for accessibility and SEO",
+            "action_steps": ["Audit images without alt tags", "Write descriptive, keyword-relevant alt text", "Update HTML"],
+            "expected_result": "Better image SEO and accessibility compliance"
+        },
+        {
+            "id": 2,
+            "title": "Optimize Page Title",
+            "category": "seo",
+            "time_to_implement": "30 minutes",
+            "description": "Create a compelling, keyword-rich title under 60 characters",
+            "action_steps": ["Research target keyword", "Write title with keyword near start", "Add brand name at end"],
+            "expected_result": "Higher click-through rates in search results"
+        },
+        {
+            "id": 3,
+            "title": "Compress Hero Image",
+            "category": "speed",
+            "time_to_implement": "1 hour",
+            "description": "Reduce hero/banner image size without quality loss",
+            "action_steps": ["Export as WebP format", "Resize to exact display dimensions", "Add lazy loading to below-fold images"],
+            "expected_result": "Faster initial page render, improved LCP"
+        },
+        {
+            "id": 4,
+            "title": "Write Meta Description",
+            "category": "seo",
+            "time_to_implement": "30 minutes",
+            "description": "Add compelling meta description with call-to-action",
+            "action_steps": ["Include target keyword naturally", "Keep under 160 characters", "Add compelling CTA"],
+            "expected_result": "Better SERP appearance and CTR"
+        },
+        {
+            "id": 5,
+            "title": "Fix Broken Links",
+            "category": "ux",
+            "time_to_implement": "1-2 hours",
+            "description": "Identify and fix any broken internal or external links",
+            "action_steps": ["Run link checker tool", "Update or remove broken links", "Add 301 redirects if needed"],
+            "expected_result": "Better user experience and crawlability"
+        }
+    ]
+    
+    # Calculate predicted improvements based on gaps
+    seo_improvement = min(25, max(5, int(abs(gaps.get('seo_score', 0)) * 0.5)))
+    speed_improvement = min(25, max(5, int(abs(gaps.get('speed_score', 0)) * 0.5)))
+    content_improvement = min(20, max(5, int(abs(gaps.get('content_score', 0)) * 0.5)))
+    overall_improvement = (seo_improvement + speed_improvement + content_improvement) // 3
+    
+    return {
+        "overall_health": {
+            "score": overall,
+            "status": status,
+            "summary": f"Your website scored {overall}/100. " + (
+                "Critical issues need immediate attention." if status == "critical" else
+                "Several optimization opportunities exist." if status == "needs_work" else
+                "Good performance with room for improvement." if status == "good" else
+                "Excellent performance! Focus on maintaining competitive edge."
+            )
+        },
+        "critical_fixes": critical_fixes,
+        "quick_wins": quick_wins,
+        "seven_day_plan": [
+            {"day": 1, "focus": "Technical Audit", "tasks": ["Fix meta tags", "Add alt text", "Check mobile responsiveness"], "goal": "Complete technical SEO basics"},
+            {"day": 2, "focus": "Speed Optimization", "tasks": ["Compress images", "Enable caching", "Minify code"], "goal": "Reduce page load time by 30%"},
+            {"day": 3, "focus": "Content Audit", "tasks": ["Analyze content gaps", "Plan improvements", "Research keywords"], "goal": "Content strategy defined"},
+            {"day": 4, "focus": "On-Page SEO", "tasks": ["Optimize headings", "Add schema markup", "Improve internal links"], "goal": "On-page optimization complete"},
+            {"day": 5, "focus": "UX Review", "tasks": ["Test mobile experience", "Improve navigation", "Optimize CTAs"], "goal": "Enhanced user experience"},
+            {"day": 6, "focus": "Content Creation", "tasks": ["Write new content", "Update existing pages", "Add visuals"], "goal": "Content quality improved"},
+            {"day": 7, "focus": "Review & Monitor", "tasks": ["Measure improvements", "Set up monitoring", "Plan next phase"], "goal": "Week 1 optimization complete"}
+        ],
+        "thirty_day_strategy": {
+            "week1": {
+                "theme": "Foundation & Quick Wins",
+                "objectives": ["Fix all critical technical issues", "Implement quick wins", "Establish baseline metrics"],
+                "expected_outcome": f"+{overall_improvement} overall score improvement"
+            },
+            "week2": {
+                "theme": "Content Enhancement",
+                "objectives": ["Expand thin content", "Optimize for target keywords", "Improve readability"],
+                "expected_outcome": "Higher content score and engagement"
+            },
+            "week3": {
+                "theme": "Competitive Positioning",
+                "objectives": ["Analyze competitor strengths", "Differentiate content", "Build authority"],
+                "expected_outcome": "Improved competitive position"
+            },
+            "week4": {
+                "theme": "Scale & Sustain",
+                "objectives": ["Document processes", "Set up ongoing monitoring", "Plan continuous improvement"],
+                "expected_outcome": "Sustainable optimization framework"
+            }
+        },
+        "competitor_insights": {
+            "your_advantages": [
+                "Unique brand identity and positioning",
+                "Opportunity to leapfrog with optimization"
+            ],
+            "areas_to_improve": [
+                f"SEO optimization (gap: {abs(gaps.get('seo_score', 0)):.0f} points)" if gaps.get('seo_score', 0) < 0 else "Maintain SEO advantage",
+                f"Page speed (gap: {abs(gaps.get('speed_score', 0)):.0f} points)" if gaps.get('speed_score', 0) < 0 else "Maintain speed advantage",
+                f"Content depth (gap: {abs(gaps.get('content_score', 0)):.0f} points)" if gaps.get('content_score', 0) < 0 else "Maintain content advantage"
+            ],
+            "outrank_strategy": "Focus on closing the biggest gaps while amplifying your unique strengths. Consistent optimization over 30 days can significantly improve your competitive position."
+        },
+        "predicted_improvements": {
+            "seo_score": f"+{seo_improvement}",
+            "speed_score": f"+{speed_improvement}",
+            "content_score": f"+{content_improvement}",
+            "overall_score": f"+{overall_improvement}",
+            "estimated_traffic_increase": f"{overall_improvement * 2}-{overall_improvement * 3}%"
+        }
+    }
       "description": "<what's wrong>",
       "fix": "<exact fix with code/text if applicable>",
       "expected_improvement": "<specific metric improvement>"
