@@ -5,11 +5,13 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import json
 from pathlib import Path
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
 import io
+import zipfile
 
 from models import (
     UserCreate, UserLogin, User, UserResponse, TokenResponse,
