@@ -142,6 +142,7 @@ function AppRoutes() {
         <Route path="/features/seo" element={<SEOAnalysisPage />} />
         <Route path="/features/speed" element={<SpeedMetricsPage />} />
         <Route path="/features/content" element={<ContentScorePage />} />
+        <Route path="/features/download" element={<DownloadFixesPage />} />
         
         {/* Solution Pages (Public) */}
         <Route path="/solutions/marketers" element={<ForMarketersPage />} />
