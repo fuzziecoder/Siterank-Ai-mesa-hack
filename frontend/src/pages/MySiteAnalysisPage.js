@@ -30,12 +30,47 @@ export default function MySiteAnalysisPage() {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    // Generate unique verification code for this user/URL
-    if (url && user) {
-      const code = `siterank-verify-${btoa(url + user.email).slice(0, 16)}`;
-      setVerificationCode(code);
-    }
+    // Generate verification code from backend
+    const fetchVerificationCode = async () => {
+      if (url && user?.email) {
+        try {
+          const response = await axios.post(`${API_URL}/api/verify/generate-code`, {
+            url: url,
+            user_email: user.email
+          });
+          setVerificationCode(response.data.verification_code);
+        } catch (error) {
+          // Fallback to client-side generation
+          const code = `siterank-verify-${btoa(url + user.email).slice(0, 16)}`;
+          setVerificationCode(code);
+        }
+      }
+    };
+    fetchVerificationCode();
   }, [url, user]);
+
+  const handleVerifyOwnership = async () => {
+    if (!url || !user?.email) return;
+    
+    setVerifying(true);
+    try {
+      const response = await axios.post(`${API_URL}/api/verify/check`, {
+        url: url,
+        user_email: user.email
+      });
+      
+      if (response.data.verified) {
+        setIsVerified(true);
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error('Verification check failed. Please try again.');
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   const handleAnalyze = async () => {
     if (!url || !isAuthenticated) return;
