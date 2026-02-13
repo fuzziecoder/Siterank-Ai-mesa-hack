@@ -542,6 +542,103 @@ async def detect_competitors_endpoint(
         raise HTTPException(status_code=500, detail=f"Failed to detect competitors: {str(e)}")
 
 
+# ==================== Optimization Blueprint ====================
+
+class OptimizeRequest(BaseModel):
+    user_site_url: str
+    competitor_urls: Optional[List[str]] = []
+    auto_detect_competitors: Optional[bool] = True
+
+
+@api_router.post("/optimize")
+async def generate_optimization(
+    request: OptimizeRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Generate a comprehensive AI-powered optimization blueprint"""
+    if not request.user_site_url:
+        raise HTTPException(status_code=400, detail="User site URL is required")
+    
+    try:
+        logger.info(f"Starting optimization for {request.user_site_url}")
+        
+        # Step 1: Scrape user's website
+        success, user_data = scrape_website(request.user_site_url)
+        if not success:
+            raise HTTPException(status_code=400, detail=f"Failed to analyze website: {request.user_site_url}")
+        
+        user_scores = analyze_scraped_data(user_data)
+        
+        # Step 2: Get competitors (auto-detect or use provided)
+        competitor_urls = request.competitor_urls or []
+        if request.auto_detect_competitors and len(competitor_urls) < 3:
+            detected = await detect_competitors(request.user_site_url)
+            competitor_urls = list(set(competitor_urls + detected))[:5]
+        
+        # Step 3: Analyze competitors
+        competitors = []
+        for comp_url in competitor_urls:
+            try:
+                success, comp_data = scrape_website(comp_url)
+                if success:
+                    comp_scores = analyze_scraped_data(comp_data)
+                    competitors.append({
+                        "url": comp_url,
+                        "scores": comp_scores.model_dump()
+                    })
+            except Exception as e:
+                logger.warning(f"Failed to analyze competitor {comp_url}: {str(e)}")
+        
+        # Step 4: Generate AI optimization blueprint
+        blueprint = await generate_optimization_blueprint(
+            request.user_site_url,
+            user_scores.model_dump(),
+            competitors,
+            user_data
+        )
+        
+        # Step 5: Save optimization to database
+        optimization_doc = {
+            "user_id": current_user['user_id'],
+            "user_site_url": request.user_site_url,
+            "user_scores": user_scores.model_dump(),
+            "competitors": competitors,
+            "blueprint": blueprint,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        await db.optimizations.insert_one(optimization_doc)
+        
+        return {
+            "success": True,
+            "user_site_url": request.user_site_url,
+            "user_scores": user_scores.model_dump(),
+            "competitors": competitors,
+            "blueprint": blueprint
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Optimization failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Optimization failed: {str(e)}")
+
+
+@api_router.get("/optimizations")
+async def get_optimizations(
+    current_user: dict = Depends(get_current_user),
+    limit: int = 10
+):
+    """Get user's optimization history"""
+    cursor = db.optimizations.find(
+        {"user_id": current_user['user_id']},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(limit)
+    
+    optimizations = await cursor.to_list(length=limit)
+    return optimizations
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
