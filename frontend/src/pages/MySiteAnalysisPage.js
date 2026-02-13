@@ -133,21 +133,6 @@ export default function MySiteAnalysisPage() {
     }
   };
 
-  const handleVerifyOwnership = async () => {
-    setVerifying(true);
-    try {
-      // In production, this would check for DNS TXT record or file existence
-      // For demo, we'll simulate verification
-      await new Promise(r => setTimeout(r, 2000));
-      setIsVerified(true);
-      toast.success('Ownership verified! You can now use CMS integrations.');
-    } catch (error) {
-      toast.error('Verification failed. Please check your DNS/file setup.');
-    } finally {
-      setVerifying(false);
-    }
-  };
-
   const copyToClipboard = (text, id) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
