@@ -3,7 +3,16 @@
 ## Original Problem Statement
 Build an AI Website Competitor Analyzer that transforms from a reporting tool into an optimization engine.
 
-## Latest Enhancement: Feature Pages Upgraded (Feb 2026)
+## Latest Enhancement: Help Bot Assistant (Dec 2025)
+- **Component:** `ChatBot.js` - Floating chatbot widget in bottom-right corner
+- **Features:**
+  - Toggle open/close on button click
+  - Quick question buttons for common queries
+  - Keyword-based response system (client-side)
+  - Covers: optimize, SEO, speed, content, dashboard, pricing, support topics
+  - Visible on all pages globally
+
+## Previous Enhancement: Feature Pages Upgraded (Feb 2026)
 
 ### SEO Analysis → AI SEO Fix Engine
 - **Endpoint:** `POST /api/seo/analyze`
@@ -71,6 +80,9 @@ Build an AI Website Competitor Analyzer that transforms from a reporting tool in
 - `/app/frontend/src/pages/SpeedMetricsPage.js` - AI Performance Optimizer
 - `/app/frontend/src/pages/ContentScorePage.js` - AI Content Enhancement
 
+### Frontend Components
+- `/app/frontend/src/components/ChatBot.js` - Floating help bot assistant
+
 ## Prioritized Backlog
 
 ### P0 (Complete)
@@ -80,6 +92,9 @@ Build an AI Website Competitor Analyzer that transforms from a reporting tool in
 - [x] SEO Analysis with AI fixes
 - [x] Speed Analysis with optimization tips
 - [x] Content Analysis with AI ideas
+- [x] Help Bot Assistant (floating chatbot)
+- [x] MetaMask error suppression
+- [x] Codebase cleanup (removed unused StarBorder.js, PillNav.js)
 
 ### P1 (Next)
 - [ ] Solutions pages upgrade (multi-client dashboard for agencies)
@@ -97,3 +112,9 @@ Build an AI Website Competitor Analyzer that transforms from a reporting tool in
 - SEO Analysis: Returns score, issues, fixes, schema generator
 - Speed Analysis: Returns metrics, issues, image optimization tips
 - Content Analysis: Returns metrics, issues, blog ideas, keywords
+- Chatbot: 100% frontend tests passed (iteration_4.json)
+  - Button visibility on all pages
+  - Open/close toggle
+  - Quick questions working
+  - Message input/send working
+  - Bot responses relevant
