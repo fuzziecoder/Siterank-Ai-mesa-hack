@@ -16,6 +16,11 @@ import SEOAnalysisPage from './pages/SEOAnalysisPage';
 import SpeedMetricsPage from './pages/SpeedMetricsPage';
 import ContentScorePage from './pages/ContentScorePage';
 import DownloadFixesPage from './pages/DownloadFixesPage';
+// Smart Analysis Pages
+import SmartAnalyzePage from './pages/SmartAnalyzePage';
+import MySiteAnalysisPage from './pages/MySiteAnalysisPage';
+import ClientSiteAnalysisPage from './pages/ClientSiteAnalysisPage';
+import CompetitorAnalysisPage from './pages/CompetitorAnalysisPage';
 // Solution Pages
 import ForMarketersPage from './pages/ForMarketersPage';
 import ForAgenciesPage from './pages/ForAgenciesPage';
