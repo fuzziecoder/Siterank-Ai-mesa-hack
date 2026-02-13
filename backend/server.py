@@ -565,7 +565,8 @@ async def generate_optimization(
         # Step 1: Scrape user's website
         success, user_data = scrape_website(request.user_site_url)
         if not success:
-            raise HTTPException(status_code=400, detail=f"Failed to analyze website: {request.user_site_url}")
+            error_msg = user_data.get('error', 'Failed to fetch website')
+            raise HTTPException(status_code=400, detail=f"{error_msg}")
         
         user_scores = analyze_scraped_data(user_data)
         
