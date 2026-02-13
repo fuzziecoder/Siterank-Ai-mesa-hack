@@ -36,9 +36,9 @@ export const Navbar = () => {
       bgColor: '#0D0716',
       textColor: '#fff',
       links: [
-        { label: 'SEO Analysis', href: '/analyze', ariaLabel: 'SEO Analysis' },
-        { label: 'Speed Metrics', href: '/analyze', ariaLabel: 'Speed Metrics' },
-        { label: 'Content Score', href: '/analyze', ariaLabel: 'Content Score' },
+        { label: 'SEO Analysis', href: '/features/seo', ariaLabel: 'SEO Analysis' },
+        { label: 'Speed Metrics', href: '/features/speed', ariaLabel: 'Speed Metrics' },
+        { label: 'Content Score', href: '/features/content', ariaLabel: 'Content Score' },
       ]
     },
     {
@@ -46,9 +46,9 @@ export const Navbar = () => {
       bgColor: '#170D27',
       textColor: '#fff',
       links: [
-        { label: 'For Marketers', href: '/analyze', ariaLabel: 'For Marketers' },
-        { label: 'For Agencies', href: '/analyze', ariaLabel: 'For Agencies' },
-        { label: 'For Enterprise', href: '/analyze', ariaLabel: 'For Enterprise' },
+        { label: 'For Marketers', href: '/solutions/marketers', ariaLabel: 'For Marketers' },
+        { label: 'For Agencies', href: '/solutions/agencies', ariaLabel: 'For Agencies' },
+        { label: 'For Enterprise', href: '/solutions/enterprise', ariaLabel: 'For Enterprise' },
       ]
     },
     {
@@ -56,9 +56,9 @@ export const Navbar = () => {
       bgColor: '#271E37',
       textColor: '#fff',
       links: [
-        { label: 'Blog', href: '#', ariaLabel: 'Blog' },
-        { label: 'Documentation', href: '#', ariaLabel: 'Documentation' },
-        { label: 'Support', href: '#', ariaLabel: 'Support' },
+        { label: 'Blog', href: '/blog', ariaLabel: 'Blog' },
+        { label: 'Documentation', href: '/docs', ariaLabel: 'Documentation' },
+        { label: 'Support', href: '/support', ariaLabel: 'Support' },
       ]
     }
   ];
