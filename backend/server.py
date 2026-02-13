@@ -833,10 +833,6 @@ async def fix_content_issues(request: ContentFixRequest):
 
 # ==================== Download All Fixes as ZIP ====================
 
-import zipfile
-import io
-from fastapi.responses import StreamingResponse
-
 class AllFixesRequest(BaseModel):
     url: str
     seo_fixes: Optional[List[Dict[str, Any]]] = []
