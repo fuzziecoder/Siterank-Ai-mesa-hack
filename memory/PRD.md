@@ -3,7 +3,21 @@
 ## Original Problem Statement
 Build an AI Website Competitor Analyzer that transforms from a reporting tool into an optimization engine.
 
-## Latest Enhancement: Help Bot Assistant (Dec 2025)
+## Latest Enhancement: Auto-Fix Engine (Dec 2025)
+- **Shift:** From "Reporting" → "Doing"
+- **New Flow:** Analyze → See Issues → Click "Fix" → AI Generates Code → Copy & Paste
+- **APIs Added:**
+  - `POST /api/fix/seo` - Generate SEO fixes (meta tags, schema, titles)
+  - `POST /api/fix/speed` - Generate performance configs (nginx/apache)
+  - `POST /api/fix/content` - Generate content improvements (rewrites, FAQs)
+- **Frontend Features:**
+  - "Fix This" button per issue
+  - "Fix All" batch generation
+  - Syntax-highlighted code blocks
+  - One-click copy functionality
+  - "Download All Fixes" option
+
+## Previous Enhancement: Help Bot Assistant (Dec 2025)
 - **Component:** `ChatBot.js` - Floating chatbot widget in bottom-right corner
 - **Features:**
   - Toggle open/close on button click
