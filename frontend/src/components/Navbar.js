@@ -181,8 +181,14 @@ export const Navbar = () => {
             <div className="flex items-center gap-3">
               {isAuthenticated ? (
                 <>
-                  <Link to="/analyze" className="hidden sm:block">
-                    <Button size="sm" className="rounded-full gap-2 bg-emerald-600 hover:bg-emerald-500 text-white" data-testid="new-analysis-btn">
+                  <Link to="/optimize" className="hidden sm:block">
+                    <Button size="sm" className="rounded-full gap-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white" data-testid="optimize-btn">
+                      <Sparkles className="w-4 h-4" />
+                      Optimize My Site
+                    </Button>
+                  </Link>
+                  <Link to="/analyze" className="hidden md:block">
+                    <Button size="sm" variant="outline" className="rounded-full gap-2 border-border text-muted-foreground hover:text-foreground" data-testid="new-analysis-btn">
                       <Plus className="w-4 h-4" />
                       New Analysis
                     </Button>
