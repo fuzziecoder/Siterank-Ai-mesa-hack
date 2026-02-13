@@ -104,6 +104,14 @@ function AppRoutes() {
           } 
         />
         <Route 
+          path="/optimize" 
+          element={
+            <ProtectedRoute>
+              <OptimizePage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
           path="/analyze" 
           element={
             <ProtectedRoute>
