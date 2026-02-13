@@ -1,106 +1,99 @@
 # SITERANK AI - PRD
 
 ## Original Problem Statement
-Build an AI Website Competitor Analyzer where business owners can:
-- Upload their website URL and competitor website URLs
-- System scrapes and extracts SEO, UI, performance, content info
-- AI analyzes differences
-- Dashboard shows score comparison, weakness areas, AI suggestions, action plan
-- Features: URL input, auto competitor scrape, score comparison chart, AI suggestion text, download PDF report
+Build an AI Website Competitor Analyzer that transforms from a reporting tool into an optimization engine.
 
-## Latest Enhancement: Optimization Engine (Feb 2026)
-Transform from reporting tool to optimization engine with:
-- **"Optimize My Site" button** - One-click comprehensive analysis
-- **AI Optimization Blueprint** - Actionable recommendations
-- **Critical Fixes** - Top 5 issues with priority scoring
-- **Quick Wins** - 5 tasks for 24-hour improvements
-- **7-Day Action Plan** - Day-by-day roadmap
-- **30-Day Strategy** - Week-by-week growth plan
-- **Competitor Insights** - Advantages, gaps, and outrank strategy
-- **Predicted Improvements** - Score and traffic estimates
+## Latest Enhancement: Feature Pages Upgraded (Feb 2026)
 
-## Architecture
+### SEO Analysis → AI SEO Fix Engine
+- **Endpoint:** `POST /api/seo/analyze`
+- **Features:**
+  - Detect meta tag issues
+  - AI-generated title and description fixes
+  - Auto schema.org generator
+  - Internal linking analysis
+  - One-click copy for all fixes
+  - Priority scoring (Critical/High/Medium)
 
-### Backend (FastAPI + MongoDB)
-- `/app/backend/server.py` - Main API with all endpoints
-- `/app/backend/optimization_engine.py` - **NEW: AI optimization blueprint generator**
-- `/app/backend/competitor_detector.py` - Auto-detect competitors with AI
-- `/app/backend/scraper.py` - BeautifulSoup web scraper
-- `/app/backend/analyzer.py` - Score calculation engine
-- `/app/backend/llm_engine.py` - GPT-5.2 AI suggestions
-- `/app/backend/auth.py` - JWT authentication
+### Speed Metrics → AI Performance Optimizer  
+- **Endpoint:** `POST /api/speed/analyze`
+- **Features:**
+  - Load time and page size analysis
+  - Core Web Vitals estimation
+  - Image optimization recommendations
+  - Compression and caching suggestions
+  - Resource bundling recommendations
+  - Code snippets for fixes
 
-### Frontend (React + Tailwind CSS)
-- `/app/frontend/src/pages/OptimizePage.js` - **NEW: Optimization blueprint page**
-- Landing, Dashboard, Analyze, Results, History pages
-- Feature pages: SEO Analysis, Speed Metrics, Content Score
-- Solution pages: For Marketers, For Agencies, For Enterprise
-- Resource pages: Blog, Documentation, Support
+### Content Score → AI Content Enhancement Engine
+- **Endpoint:** `POST /api/content/analyze`
+- **Features:**
+  - Word count and readability analysis
+  - Thin content detection
+  - Heading structure analysis
+  - AI-generated content ideas (3 blog topics)
+  - Keyword detection and suggestions
+  - FAQ section recommendations
 
-## API Endpoints
+## Complete API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/auth/register` | Register new user |
 | POST | `/api/auth/login` | Login user |
 | GET | `/api/auth/me` | Get current user |
-| POST | `/api/analyze` | Create new analysis |
-| GET | `/api/analyses` | List user analyses |
-| GET | `/api/analyses/{id}` | Get specific analysis |
+| POST | `/api/analyze` | Create full analysis |
+| GET | `/api/analyses` | List analyses |
+| GET | `/api/analyses/{id}` | Get analysis |
 | DELETE | `/api/analyses/{id}` | Delete analysis |
 | GET | `/api/analyses/{id}/report` | Download report |
-| GET | `/api/dashboard/stats` | Get dashboard stats |
+| GET | `/api/dashboard/stats` | Dashboard stats |
 | POST | `/api/competitors/detect` | Auto-detect competitors |
-| **POST** | **`/api/optimize`** | **Generate optimization blueprint** |
-| **GET** | **`/api/optimizations`** | **Get optimization history** |
+| POST | `/api/optimize` | Generate optimization blueprint |
+| **POST** | **`/api/seo/analyze`** | **SEO analysis with AI fixes** |
+| **POST** | **`/api/speed/analyze`** | **Speed analysis with optimization** |
+| **POST** | **`/api/content/analyze`** | **Content analysis with AI ideas** |
 
-## What's Been Implemented
+## Architecture
 
-### Core Features
-- [x] JWT authentication (7-day token)
-- [x] Website scraping (SEO, speed, content, UX)
-- [x] Score calculation with weighted scoring
-- [x] Competitor comparison with charts
-- [x] AI suggestions (GPT-5.2)
-- [x] Auto-detect competitors
-- [x] **Optimize My Site feature with full blueprint**
+### Backend Files
+- `/app/backend/server.py` - Main API server
+- `/app/backend/optimization_engine.py` - Optimization blueprint generator
+- `/app/backend/seo_analyzer.py` - SEO analysis with AI fixes
+- `/app/backend/speed_analyzer.py` - Speed analysis engine
+- `/app/backend/content_analyzer.py` - Content analysis engine
+- `/app/backend/competitor_detector.py` - Auto-detect competitors
+- `/app/backend/scraper.py` - Website scraper (improved URL handling)
 
-### Navigation Pages (All Functional)
-- [x] Features: SEO Analysis, Speed Metrics, Content Score
-- [x] Solutions: For Marketers, For Agencies, For Enterprise
-- [x] Resources: Blog, Documentation, Support
-
-### UI/UX
-- [x] Dark theme throughout
-- [x] SITERANK AI branding with shiny text
-- [x] Transparent logo
-- [x] Gradient "Optimize My Site" button in navbar
-- [x] Expandable blueprint sections
+### Frontend Pages
+- `/app/frontend/src/pages/OptimizePage.js` - "Optimize My Site" feature
+- `/app/frontend/src/pages/SEOAnalysisPage.js` - AI SEO Fix Engine
+- `/app/frontend/src/pages/SpeedMetricsPage.js` - AI Performance Optimizer
+- `/app/frontend/src/pages/ContentScorePage.js` - AI Content Enhancement
 
 ## Prioritized Backlog
 
-### P0 (Done)
+### P0 (Complete)
 - [x] Core analysis MVP
 - [x] Auto-detect competitors
-- [x] Optimize My Site feature
+- [x] "Optimize My Site" blueprint
+- [x] SEO Analysis with AI fixes
+- [x] Speed Analysis with optimization tips
+- [x] Content Analysis with AI ideas
 
 ### P1 (Next)
-- [ ] Upgrade Feature pages with AI actions (SEO Fix Engine, Speed Optimizer, Content Enhancer)
-- [ ] Add copy-to-clipboard for all AI recommendations
-- [ ] PDF report generation for optimization blueprint
+- [ ] Solutions pages upgrade (multi-client dashboard for agencies)
+- [ ] AI Support Agent in Resources
+- [ ] Export optimization blueprint to PDF
 
 ### P2 (Future)
-- [ ] Enhanced Solutions pages (multi-client dashboard, content calendar)
-- [ ] AI Support Agent in Resources
-- [ ] Continuous monitoring with alerts
-- [ ] Light/Dark mode toggle
+- [ ] Content calendar generator
+- [ ] Keyword gap analyzer
+- [ ] Continuous monitoring
+- [ ] Email notifications
 
 ## Testing Status
-- Backend API: Verified working (optimize endpoint returns full blueprint)
-- Frontend: Pages render correctly
-- Test report: `/app/test_reports/iteration_3.json`
-
-## Tech Stack
-- Backend: FastAPI, MongoDB, BeautifulSoup, emergentintegrations (GPT-5.2)
-- Frontend: React, TailwindCSS, Shadcn UI, Recharts, Lucide icons
-- Auth: JWT (7-day expiry)
+- All APIs verified working
+- SEO Analysis: Returns score, issues, fixes, schema generator
+- Speed Analysis: Returns metrics, issues, image optimization tips
+- Content Analysis: Returns metrics, issues, blog ideas, keywords
