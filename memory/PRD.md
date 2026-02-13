@@ -3,7 +3,19 @@
 ## Original Problem Statement
 Build an AI Website Competitor Analyzer that transforms from a reporting tool into an optimization engine.
 
-## Latest Enhancement: Auto-Fix Engine (Dec 2025)
+## Latest Enhancement: Smart Analysis Flow (Dec 2025)
+- **The 3 User Types:**
+  1. **Website Owners** → Generate fix code + CMS connect (with ownership verification)
+  2. **SEO Agencies** → PDF reports + fix packages for clients
+  3. **Competitor Researchers** → Intelligence only, suggestions for YOUR site
+- **New Pages:**
+  - `/smart-analyze` - User type selection
+  - `/analyze/my-site` - Owner analysis with ownership verification
+  - `/analyze/client-site` - Agency mode with PDF export
+  - `/analyze/competitor` - Competitive intelligence (no fix buttons)
+- **Key Principle:** AI generates fix code, user applies it themselves (legitimate & legal)
+
+## Previous Enhancement: Auto-Fix Engine (Dec 2025)
 - **Shift:** From "Reporting" → "Doing"
 - **New Flow:** Analyze → See Issues → Click "Fix" → AI Generates Code → Copy & Paste
 - **APIs Added:**
