@@ -10,12 +10,14 @@ Build an AI Website Competitor Analyzer that transforms from a reporting tool in
   - `POST /api/fix/seo` - Generate SEO fixes (meta tags, schema, titles)
   - `POST /api/fix/speed` - Generate performance configs (nginx/apache)
   - `POST /api/fix/content` - Generate content improvements (rewrites, FAQs)
+  - `POST /api/fix/download-zip` - Download all fixes as ZIP package
 - **Frontend Features:**
   - "Fix This" button per issue
   - "Fix All" batch generation
   - Syntax-highlighted code blocks
   - One-click copy functionality
-  - "Download All Fixes" option
+  - "Download All Fixes" page (/features/download)
+  - ZIP package with README, seo-fixes.html, speed-fixes.conf, content-fixes.html, summary.json
 
 ## Previous Enhancement: Help Bot Assistant (Dec 2025)
 - **Component:** `ChatBot.js` - Floating chatbot widget in bottom-right corner
