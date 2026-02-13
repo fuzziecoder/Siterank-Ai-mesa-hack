@@ -8,89 +8,34 @@ Build an AI Website Competitor Analyzer where business owners can:
 - Dashboard shows score comparison, weakness areas, AI suggestions, action plan
 - Features: URL input, auto competitor scrape, score comparison chart, AI suggestion text, download PDF report
 
-## User Choices
-- AI Provider: OpenAI GPT-5.2 with Emergent LLM key
-- Scraping: BeautifulSoup (basic, lighter)
-- Performance Metrics: Built-in estimation
-- Authentication: JWT-based (email/password)
-- Branding: SITERANK AI with hexagonal cube logo
-- No SaaS scaling features (monitoring, weekly reports)
+## Latest Enhancement: Optimization Engine (Feb 2026)
+Transform from reporting tool to optimization engine with:
+- **"Optimize My Site" button** - One-click comprehensive analysis
+- **AI Optimization Blueprint** - Actionable recommendations
+- **Critical Fixes** - Top 5 issues with priority scoring
+- **Quick Wins** - 5 tasks for 24-hour improvements
+- **7-Day Action Plan** - Day-by-day roadmap
+- **30-Day Strategy** - Week-by-week growth plan
+- **Competitor Insights** - Advantages, gaps, and outrank strategy
+- **Predicted Improvements** - Score and traffic estimates
 
 ## Architecture
 
 ### Backend (FastAPI + MongoDB)
-- `/app/backend/server.py` - Main API server with routes
-- `/app/backend/models.py` - Pydantic models
+- `/app/backend/server.py` - Main API with all endpoints
+- `/app/backend/optimization_engine.py` - **NEW: AI optimization blueprint generator**
+- `/app/backend/competitor_detector.py` - Auto-detect competitors with AI
 - `/app/backend/scraper.py` - BeautifulSoup web scraper
 - `/app/backend/analyzer.py` - Score calculation engine
-- `/app/backend/llm_engine.py` - GPT-5.2 integration for AI suggestions
+- `/app/backend/llm_engine.py` - GPT-5.2 AI suggestions
 - `/app/backend/auth.py` - JWT authentication
-- `/app/backend/competitor_detector.py` - AI-powered competitor auto-detection
 
 ### Frontend (React + Tailwind CSS)
-- Landing page with hero section
-- Auth pages (login/register)
-- Dashboard with stats overview
-- Analysis creation page with auto-detect competitors feature
-- Analysis results with charts (Recharts)
-- History page with search/delete
-
-## User Personas
-1. **Business Owner** - Wants to understand website performance vs competitors
-2. **Marketing Manager** - Needs actionable SEO/content recommendations
-3. **SEO Professional** - Requires detailed metrics and comparison data
-
-## Core Requirements (Static)
-- [x] User authentication (JWT)
-- [x] URL input for user site + competitors (up to 5)
-- [x] Website scraping (SEO, speed, content, UX metrics)
-- [x] Score calculation (weighted: SEO 30%, Speed 20%, Content 30%, UX 20%)
-- [x] Competitor comparison with charts
-- [x] AI-powered improvement suggestions (GPT-5.2)
-- [x] Action plan generation
-- [x] Report download (text format)
-- [x] **NEW: Auto-detect competitors using AI**
-
-## What's Been Implemented (Feb 2026)
-
-### Backend
-- FastAPI server with JWT authentication (7-day token expiry)
-- MongoDB integration for users and analyses
-- Website scraper using BeautifulSoup extracting:
-  - SEO: title, meta tags, headings, structured data, links, images
-  - Speed: load time, page size, resources, compression
-  - Content: word count, paragraphs, blog/FAQ detection
-  - UX: mobile viewport, navigation, forms, accessibility
-- Scoring engine with weighted overall score
-- GPT-5.2 integration via emergentintegrations library
-- Background task processing for analyses
-- Report download endpoint
-- **NEW: Auto-detect competitors API (`POST /api/competitors/detect`)**
-- **NEW: Industry insights generation**
-
-### Frontend
-- Landing page with hero, features, how-it-works sections
-- User registration and login
-- Dashboard with stats (total, completed, avg/best scores)
-- New analysis form with URL validation
-- **NEW: Auto-detect competitors button**
-- **NEW: Industry insights display (green-tinted box)**
-- **NEW: Emerald green button colors**
-- **NEW: Larger logo (80x80px) without circular wrapper**
-- Analysis results page with:
-  - Overall score display
-  - Bar chart comparison (Recharts)
-  - Radar chart for performance visualization
-  - AI Suggestions tab with GPT-5.2 recommendations
-  - Action plan with prioritized items
-  - Details tab with metric breakdowns
-- History page with search and delete functionality
-
-### UI Components
-- `/app/frontend/src/components/Logo.js` - Updated logo (larger, no circle)
-- `/app/frontend/src/components/StarBorder.js` - New animated border component (created, not yet integrated)
-- `/app/frontend/src/components/ShinyText.js` - Brand text effect
-- `/app/frontend/src/components/Navbar.js` - Navigation with dropdown menus
+- `/app/frontend/src/pages/OptimizePage.js` - **NEW: Optimization blueprint page**
+- Landing, Dashboard, Analyze, Results, History pages
+- Feature pages: SEO Analysis, Speed Metrics, Content Score
+- Solution pages: For Marketers, For Agencies, For Enterprise
+- Resource pages: Blog, Documentation, Support
 
 ## API Endpoints
 
@@ -99,50 +44,63 @@ Build an AI Website Competitor Analyzer where business owners can:
 | POST | `/api/auth/register` | Register new user |
 | POST | `/api/auth/login` | Login user |
 | GET | `/api/auth/me` | Get current user |
-| POST | `/api/analyses` | Create new analysis |
+| POST | `/api/analyze` | Create new analysis |
 | GET | `/api/analyses` | List user analyses |
 | GET | `/api/analyses/{id}` | Get specific analysis |
 | DELETE | `/api/analyses/{id}` | Delete analysis |
 | GET | `/api/analyses/{id}/report` | Download report |
 | GET | `/api/dashboard/stats` | Get dashboard stats |
-| **POST** | **`/api/competitors/detect`** | **Auto-detect competitors (NEW)** |
+| POST | `/api/competitors/detect` | Auto-detect competitors |
+| **POST** | **`/api/optimize`** | **Generate optimization blueprint** |
+| **GET** | **`/api/optimizations`** | **Get optimization history** |
+
+## What's Been Implemented
+
+### Core Features
+- [x] JWT authentication (7-day token)
+- [x] Website scraping (SEO, speed, content, UX)
+- [x] Score calculation with weighted scoring
+- [x] Competitor comparison with charts
+- [x] AI suggestions (GPT-5.2)
+- [x] Auto-detect competitors
+- [x] **Optimize My Site feature with full blueprint**
+
+### Navigation Pages (All Functional)
+- [x] Features: SEO Analysis, Speed Metrics, Content Score
+- [x] Solutions: For Marketers, For Agencies, For Enterprise
+- [x] Resources: Blog, Documentation, Support
+
+### UI/UX
+- [x] Dark theme throughout
+- [x] SITERANK AI branding with shiny text
+- [x] Transparent logo
+- [x] Gradient "Optimize My Site" button in navbar
+- [x] Expandable blueprint sections
 
 ## Prioritized Backlog
 
-### P0 (Critical) - DONE
-- [x] User authentication
-- [x] Website analysis core flow
-- [x] Score comparison
-- [x] AI suggestions
+### P0 (Done)
+- [x] Core analysis MVP
 - [x] Auto-detect competitors
+- [x] Optimize My Site feature
 
-### P1 (Important)
-- [ ] PDF report generation (currently text format)
-- [ ] Improved error handling for scraping failures
-- [ ] "AI Growth Advisor" - proactive strategic advice based on competitor trends
-- [ ] Functional navigation links (Blog, Documentation, Support pages)
+### P1 (Next)
+- [ ] Upgrade Feature pages with AI actions (SEO Fix Engine, Speed Optimizer, Content Enhancer)
+- [ ] Add copy-to-clipboard for all AI recommendations
+- [ ] PDF report generation for optimization blueprint
 
-### P2 (Nice to Have)
-- [ ] Dashboard charts showing score trends over time
-- [ ] Email notifications when analysis completes
-- [ ] Export analysis data to CSV
-- [ ] Compare specific pages (not just homepages)
+### P2 (Future)
+- [ ] Enhanced Solutions pages (multi-client dashboard, content calendar)
+- [ ] AI Support Agent in Resources
+- [ ] Continuous monitoring with alerts
 - [ ] Light/Dark mode toggle
-- [ ] User settings page
-
-### P3 (Future)
-- [ ] Continuous monitoring (SaaS feature)
-- [ ] Weekly AI strategy reports
-- [ ] Auto improvement checklist tracking
-- [ ] Integrate StarBorder component into key buttons
 
 ## Testing Status
-- Backend: 100% pass rate (20 tests)
-- Frontend: 100% pass rate (UI verification)
+- Backend API: Verified working (optimize endpoint returns full blueprint)
+- Frontend: Pages render correctly
 - Test report: `/app/test_reports/iteration_3.json`
 
-## Next Tasks
-1. Consider adding PDF report generation using a library like reportlab
-2. Implement "AI Growth Advisor" feature for proactive advice
-3. Create basic pages for navigation links (Blog, Documentation, Support)
-4. Add loading skeletons for better perceived performance
+## Tech Stack
+- Backend: FastAPI, MongoDB, BeautifulSoup, emergentintegrations (GPT-5.2)
+- Frontend: React, TailwindCSS, Shadcn UI, Recharts, Lucide icons
+- Auth: JWT (7-day expiry)
