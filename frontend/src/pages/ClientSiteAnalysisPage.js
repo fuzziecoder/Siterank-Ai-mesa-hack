@@ -189,7 +189,7 @@ export default function ClientSiteAnalysisPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-foreground">Client Website Audit</h1>
-            <p className="text-muted-foreground">Generate professional reports and fix packages for your clients</p>
+            <p className="text-muted-foreground">Generate professional white-label reports for your clients</p>
           </div>
         </div>
 
@@ -221,16 +221,65 @@ export default function ClientSiteAnalysisPage() {
                 />
               </div>
             </div>
-            <div>
-              <label className="text-sm text-muted-foreground mb-2 block">Your Agency Name (for branding)</label>
-              <Input
-                type="text"
-                placeholder="Your Agency Name"
-                value={agencyName}
-                onChange={(e) => setAgencyName(e.target.value)}
-                className="bg-muted border-border"
-              />
+            
+            {/* White Label Branding */}
+            <div className="border border-border rounded-lg p-4 bg-muted/20">
+              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                <Palette className="w-4 h-4 text-cyan-400" />
+                White Label Branding
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-muted-foreground mb-2 block">Agency Name</label>
+                  <Input
+                    type="text"
+                    placeholder="Your Agency Name"
+                    value={agencyName}
+                    onChange={(e) => setAgencyName(e.target.value)}
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground mb-2 block">Agency Website</label>
+                  <Input
+                    type="text"
+                    placeholder="https://youragency.com"
+                    value={agencyWebsite}
+                    onChange={(e) => setAgencyWebsite(e.target.value)}
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground mb-2 block">Agency Email</label>
+                  <Input
+                    type="email"
+                    placeholder="hello@youragency.com"
+                    value={agencyEmail}
+                    onChange={(e) => setAgencyEmail(e.target.value)}
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground mb-2 block">Brand Color</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={primaryColor}
+                      onChange={(e) => setPrimaryColor(e.target.value)}
+                      className="w-12 h-10 rounded cursor-pointer"
+                    />
+                    <Input
+                      type="text"
+                      value={primaryColor}
+                      onChange={(e) => setPrimaryColor(e.target.value)}
+                      className="bg-muted border-border flex-1"
+                      placeholder="#10B981"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
+            
             <Button
               onClick={handleAnalyze}
               disabled={loading || !url || !isAuthenticated}
