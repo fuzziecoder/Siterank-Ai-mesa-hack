@@ -22,6 +22,7 @@ from analyzer import analyze_scraped_data, compare_all
 from llm_engine import generate_ai_suggestions
 from competitor_detector import detect_competitors, get_industry_insights
 from optimization_engine import generate_optimization_blueprint
+from seo_analyzer import analyze_seo
 
 
 # ==================== Competitor Detection ====================
@@ -34,6 +35,13 @@ class CompetitorDetectRequest(BaseModel):
 class CompetitorDetectResponse(BaseModel):
     competitors: List[str]
     industry_insights: Optional[dict] = None
+
+
+# ==================== SEO Analysis ====================
+
+class SEOAnalyzeRequest(BaseModel):
+    url: str
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
