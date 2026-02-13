@@ -7,7 +7,7 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
 import io
 
@@ -21,6 +21,7 @@ from scraper import scrape_website
 from analyzer import analyze_scraped_data, compare_all
 from llm_engine import generate_ai_suggestions
 from competitor_detector import detect_competitors, get_industry_insights
+from optimization_engine import generate_optimization_blueprint
 
 
 # ==================== Competitor Detection ====================
