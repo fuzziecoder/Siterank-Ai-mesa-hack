@@ -9,6 +9,18 @@ import DashboardPage from './pages/DashboardPage';
 import AnalyzePage from './pages/AnalyzePage';
 import AnalysisResultPage from './pages/AnalysisResultPage';
 import HistoryPage from './pages/HistoryPage';
+// Feature Pages
+import SEOAnalysisPage from './pages/SEOAnalysisPage';
+import SpeedMetricsPage from './pages/SpeedMetricsPage';
+import ContentScorePage from './pages/ContentScorePage';
+// Solution Pages
+import ForMarketersPage from './pages/ForMarketersPage';
+import ForAgenciesPage from './pages/ForAgenciesPage';
+import ForEnterprisePage from './pages/ForEnterprisePage';
+// Resource Pages
+import BlogPage from './pages/BlogPage';
+import DocumentationPage from './pages/DocumentationPage';
+import SupportPage from './pages/SupportPage';
 import './App.css';
 
 // Protected Route Component
