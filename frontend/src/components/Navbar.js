@@ -39,6 +39,7 @@ export const Navbar = () => {
         { label: 'SEO Analysis', href: '/features/seo', ariaLabel: 'SEO Analysis' },
         { label: 'Speed Metrics', href: '/features/speed', ariaLabel: 'Speed Metrics' },
         { label: 'Content Score', href: '/features/content', ariaLabel: 'Content Score' },
+        { label: 'Download All Fixes', href: '/features/download', ariaLabel: 'Download All Fixes' },
       ]
     },
     {
