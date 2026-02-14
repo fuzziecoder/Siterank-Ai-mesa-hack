@@ -39,6 +39,9 @@ const css = `
     .srf-mobile-text-sm{font-size:10px !important}
     .srf-tabs-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
     .srf-tabs-scroll::-webkit-scrollbar{display:none}
+    .srf-url-input-wrap{flex-direction:column !important;padding:12px !important}
+    .srf-url-input-wrap input{width:100% !important;padding:10px 0 !important}
+    .srf-url-input-wrap button{width:100% !important;margin-top:8px !important}
   }
   @media (max-width: 480px) {
     .srf-mobile-xs-col{flex-direction:column !important}
