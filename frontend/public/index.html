@@ -11,6 +11,20 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
         
+        <!-- Hide Emergent badge -->
+        <style>
+            #emergent-badge, 
+            [id*="emergent-badge"], 
+            a[href*="emergent.sh"][style*="position: fixed"],
+            div[style*="Made with Emergent"],
+            a[style*="bottom: 16px"][style*="right: 16px"] {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+        </style>
+        
         <!-- METAMASK/EXTENSION ERROR SUPPRESSION - Must run first -->
         <script>
             (function() {
