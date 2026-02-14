@@ -28,7 +28,9 @@
   <!-- AI Models -->
   <img src="https://img.shields.io/badge/NVIDIA-DeepSeek%20v3.2-76B900?style=flat-square&logo=nvidia&logoColor=white" alt="NVIDIA DeepSeek" />
   <img src="https://img.shields.io/badge/OpenAI-GPT--5.2-412991?style=flat-square&logo=openai&logoColor=white" alt="OpenAI" />
+  <img src="https://img.shields.io/badge/Claude-Sonnet%204.5-CC785C?style=flat-square&logo=anthropic&logoColor=white" alt="Claude" />
   <img src="https://img.shields.io/badge/MCP-Model%20Context%20Protocol-0066FF?style=flat-square&logo=anthropic&logoColor=white" alt="MCP" />
+  <img src="https://img.shields.io/badge/RankBot-Tool%20Calling%20Agent-FF6B35?style=flat-square&logo=chatbot&logoColor=white" alt="RankBot" />
 </p>
 
 <p align="center">
@@ -43,6 +45,9 @@
   <a href="#-problem-statement">Problem</a> •
   <a href="#-solution-overview">Solution</a> •
   <a href="#-features">Features</a> •
+  <a href="#-rankbot--mcp-powered-ai-chatbot">RankBot</a> •
+  <a href="#-one-click-ai-implementation-engine">Implement</a> •
+  <a href="#-trust--ownership-model">Trust Model</a> •
   <a href="#-solution-architecture">Architecture</a> •
   <a href="#-business-model">Business Model</a> •
   <a href="#-getting-started">Getting Started</a> •
@@ -59,13 +64,16 @@
 3. [Target Market & ICPs](#-target-market--icps)
 4. [Use Cases](#-use-cases)
 5. [Features](#-features)
-6. [Solution Architecture](#-solution-architecture)
-7. [Technology Stack](#-technology-stack)
-8. [Integrations](#-integrations)
-9. [Business Model](#-business-model)
-10. [API Documentation](#-api-documentation)
-11. [Getting Started](#-getting-started)
-12. [Roadmap](#-roadmap)
+6. [RankBot — MCP-Powered AI Chatbot](#-rankbot--mcp-powered-ai-chatbot)
+7. [One-Click AI Implementation Engine](#-one-click-ai-implementation-engine)
+8. [Trust & Ownership Model](#-trust--ownership-model)
+9. [Solution Architecture](#-solution-architecture)
+10. [Technology Stack](#-technology-stack)
+11. [Integrations](#-integrations)
+12. [Business Model](#-business-model)
+13. [API Documentation](#-api-documentation)
+14. [Getting Started](#-getting-started)
+15. [Roadmap](#-roadmap)
 
 ---
 
@@ -320,6 +328,330 @@ The one-click comprehensive analysis that delivers a complete optimization bluep
 - Natural language support — ask anything about your site
 - Context-aware optimization advice
 - Available 24/7
+
+---
+
+## 🤖 RankBot — MCP-Powered AI Chatbot
+
+RankBot is not a FAQ bot. It is a **tool-calling AI agent** built on the Model Context Protocol — it understands natural language, decides which backend tools to invoke, executes them with real data, and synthesizes the results into specific, actionable advice.
+
+### How It Works
+
+```
+User: "Analyze my site example.com vs competitor hubspot.com"
+              ↓
+    RankBot decides which tools to call
+              ↓
+   🔧 Tool Call 1: analyze_seo("example.com")
+   🔧 Tool Call 2: analyze_seo("hubspot.com")
+   🔧 Tool Call 3: compare_competitors(...)
+              ↓
+    RankBot reads live results
+              ↓
+    RankBot responds with real scores + specific action plan
+```
+
+### The 6 MCP Tools
+
+| Tool | What It Does | Triggered When User Says… |
+|---|---|---|
+| `analyze_seo(url)` | Checks meta tags, headings, schema, sitemap | "analyze my SEO" / "check my site" |
+| `analyze_speed(url)` | Returns LCP, CLS, FID, page size | "why is my site slow" / "speed score" |
+| `analyze_content(url)` | Word count, readability, E-E-A-T | "improve my content" / "content score" |
+| `check_ux(url)` | Mobile-friendliness, WCAG accessibility | "UX issues" / "mobile problems" |
+| `compare_competitors(url, rivals[])` | Side-by-side gap analysis | "compare with…" / "beat competitor" |
+| `generate_action_plan(url, scores)` | Prioritized fix list with effort + impact | "what should I fix first" / "action plan" |
+
+### Agent Architecture
+
+```
+┌─────────────────────────────────────┐
+│         CHAT UI (Frontend)          │  ← User types; sees live tool status
+├─────────────────────────────────────┤
+│      AI AGENT (Claude / GPT)        │  ← Understands intent, picks tools
+├─────────────────────────────────────┤
+│         MCP TOOL LAYER              │  ← analyze_seo, analyze_speed, compare…
+│   (calls your real FastAPI routes)  │  ← Live data — never mocked
+└─────────────────────────────────────┘
+```
+
+### MCP Server Setup
+
+The MCP server wraps the existing FastAPI app and exposes every route as a callable tool — no rewriting needed.
+
+```python
+# mcpserver.py
+from fastmcp import FastMCP
+from server import app
+
+mcp = FastMCP.from_fastapi(
+    app=app,
+    name="SITERANK AI Server",
+)
+
+if __name__ == "__main__":
+    mcp.run(
+        transport="streamable-http",
+        host="0.0.0.0",
+        port=8001
+    )
+```
+
+### FastAPI Routes → MCP Tools (auto-mapped)
+
+| FastAPI Route | MCP Tool | Claude Calls It When… |
+|---|---|---|
+| `POST /analyze/seo` | `analyze_seo(url)` | User says "check my SEO" |
+| `POST /analyze/speed` | `analyze_speed(url)` | User says "why is site slow" |
+| `POST /analyze/content` | `analyze_content(url)` | User says "improve my content" |
+| `POST /compare` | `compare_competitors(url, rivals)` | User says "compare with X" |
+| `POST /action-plan` | `generate_action_plan(url)` | User says "what do I fix first" |
+
+### Example Conversation
+
+```
+👤 User: "My speed score is 72. How do I fix it?"
+
+🔧 RankBot calls: analyze_speed("example.com")
+   Tool returns → LCP: 3.2s, render-blocking JS: 3 files,
+                  no WebP images, no caching headers
+
+🤖 RankBot responds:
+   "Your main bottleneck is a 3.2s LCP — above the 2.5s threshold.
+    Priority fixes:
+    1. ⚡ Defer 3 render-blocking scripts → +8 speed pts (1 hr work)
+    2. 🖼  Convert images to WebP         → +5 speed pts (1 hr work)
+    3. 📦 Add cache-control headers       → +4 speed pts (30 min work)
+    Want me to generate the exact code for each?"
+```
+
+### UX Details That Make It Feel Powerful
+
+- **Live tool call indicators** — displays `🔧 Running: analyze_seo("example.com")...` so users see work happening
+- **Score cards in chat** — renders real score widgets directly inside the conversation
+- **Quick prompt chips** — one-click buttons: *Analyze my site*, *Compare competitors*, *Fix my speed*
+- **Follow-up suggestions** — after every result, RankBot recommends the next logical action
+
+### Chat API Bridge
+
+```python
+# Add to server.py — routes frontend → Claude with tool loop
+
+@app.post("/api/chat")
+async def chat(req: ChatRequest):
+    messages = req.history + [{"role": "user", "content": req.message}]
+
+    while True:
+        response = client.messages.create(
+            model="claude-opus-4-5-20251101",
+            max_tokens=2048,
+            system="""You are RankBot, SiteRank AI's expert assistant.
+When users mention a URL, ALWAYS call the appropriate tool first.
+Never guess scores — always use tools to get real data.""",
+            tools=MCP_TOOLS,
+            messages=messages
+        )
+
+        if response.stop_reason == "end_turn":
+            text = next(b.text for b in response.content if b.type == "text")
+            return {"reply": text}
+
+        # Process tool calls → call real FastAPI endpoints → feed results back
+        tool_results = await process_tool_calls(response.content)
+        messages.append({"role": "assistant", "content": response.content})
+        messages.append({"role": "user", "content": tool_results})
+```
+
+---
+
+## ⚡ One-Click AI Implementation Engine
+
+SITERANK AI goes beyond reporting. When an issue is found, users can click **"Implement Now"** and the AI generates complete, production-ready fix code — not suggestions, not advice, **actual working code to paste**.
+
+### The Shift: Reporting → Doing
+
+```
+OLD:  User → Analyze URL → See problems → Fix manually (hours)
+
+NEW:  User → Analyze URL → See problems → Click "Implement Now"
+             → AI generates exact fix code → Copy → Done (minutes)
+```
+
+### What Each Feature Implements
+
+#### 🔍 SEO — Auto-Fix
+
+| Issue Detected | AI Output |
+|---|---|
+| Title tag too long / missing | Optimized `<title>` tag (50–60 chars, keyword-rich) |
+| Meta description missing | Written meta description from page content with CTA |
+| No H1 tag | Suggested H1 with target keyword inserted |
+| Images missing alt text | Descriptive alt text generated per image |
+| No schema markup | Complete JSON-LD block (Organization, WebPage, FAQ) |
+| Canonical tag missing | Correct canonical HTML tag |
+| No sitemap | `sitemap.xml` generated from crawled URLs |
+
+#### ⚡ Speed — Auto-Fix
+
+| Issue Detected | AI Output |
+|---|---|
+| Render-blocking JS | `<script>` tags rewritten with `defer`/`async` |
+| Uncompressed images | `<picture>` + `srcset` WebP code |
+| Missing cache headers | `.htaccess` or `nginx.conf` cache config |
+| No lazy loading | `loading="lazy"` added to all `<img>` tags |
+| Missing gzip config | Server compression configuration block |
+| No LCP image preload | `<link rel="preload">` tag generated |
+
+#### 📝 Content — Auto-Fix
+
+| Issue Detected | AI Output |
+|---|---|
+| Title not keyword-optimized | Rewrites title with target keyword |
+| Thin content (<500 words) | AI-written expansion paragraphs |
+| Low readability score | Complex paragraphs rewritten clearly |
+| No FAQ section | FAQ section with JSON-LD schema generated |
+| Missing internal links | Anchor text + target URL suggestions inserted |
+| Weak CTA | Call-to-action copy rewritten |
+| No conclusion | Conclusion paragraph written |
+
+### Implementation API Endpoints
+
+```
+POST /api/implement/seo      → generates SEO fix code
+POST /api/implement/speed    → generates speed fix code  
+POST /api/implement/content  → rewrites content sections
+```
+
+#### Example Response Structure
+
+```json
+{
+  "suggestion_id": "missing_meta_description",
+  "title": "Add Meta Description",
+  "status": "implemented",
+  "implementations": [
+    {
+      "file": "index.html",
+      "placement": "Inside <head>",
+      "before": null,
+      "after": "<meta name='description' content='AI-powered SEO tool that analyzes your website and outranks competitors in 30 days.' />",
+      "action_label": "Copy & Paste into <head>",
+      "estimated_impact": "+8 SEO points, +15% CTR"
+    }
+  ]
+}
+```
+
+### UI Flow
+
+```
+STEP 1 — Analysis View
+┌─────────────────────────────────────────┐
+│  SEO Score: 65/100                      │
+│                                         │
+│  ✕ Missing meta description             │
+│  ✕ No schema markup       [⚡ FIX ALL]  │
+│  ✕ Title tag too long                   │
+└─────────────────────────────────────────┘
+
+STEP 2 — AI Generating Fixes
+┌─────────────────────────────────────────┐
+│  🤖 AI is generating fixes...           │
+│  ✓ Analyzing meta description...        │
+│  ✓ Writing optimized title...           │
+│  ✓ Generating schema markup...          │
+└─────────────────────────────────────────┘
+
+STEP 3 — Ready-to-Use Code
+┌─────────────────────────────────────────┐
+│  ✓ Meta Description Fixed               │
+│  📄 Paste in: index.html → <head>       │
+│  ┌──────────────────────────────────┐   │
+│  │ <meta name="description"         │   │
+│  │   content="AI-powered SEO tool…" │   │
+│  └──────────────────────────────────┘   │
+│  [📋 Copy Code]  [⬇ Download Patch]     │
+└─────────────────────────────────────────┘
+```
+
+### Three Delivery Modes
+
+| Mode | Description | Status |
+|---|---|---|
+| **Copy-Paste** | Syntax-highlighted code block + one-click copy | ✅ Built |
+| **Patch File** | Download `.patch` → apply with `git apply` | 🔄 In Progress |
+| **GitHub PR** | OAuth → AI opens pull request directly in repo | 📋 Planned |
+
+---
+
+## 🔐 Trust & Ownership Model
+
+SITERANK AI is an **audit and fix-generation tool** — it reads publicly available website data and generates recommendations. It never pushes changes to a website without explicit owner authorization.
+
+### The Three User Roles
+
+```
+┌─────────────────────────────────────────────┐
+│  Step 1: Who is this site?                  │
+│                                             │
+│  ○ This is MY website                       │
+│  ○ This is a CLIENT website                 │
+│  ○ This is a COMPETITOR website             │
+└─────────────────────────────────────────────┘
+         ↓              ↓               ↓
+   Fix code +     Export report +   Intelligence
+   CMS connect    fix package for   only — no
+   option         the client        fix UI shown
+```
+
+| User Type | What They Need | What SITERANK AI Provides |
+|---|---|---|
+| **Website Owner** | Fix code to paste themselves | Code snippets + optional CMS connect (with OAuth) |
+| **SEO Agency** | Client report + fix recommendations | PDF report + fix package to send to client's dev team |
+| **Competitor Researcher** | Intelligence only | Competitive gap analysis — no fix UI shown |
+
+### Ownership Verification (for Direct Apply)
+
+For users who want AI to apply fixes directly via CMS, ownership is verified the same way as Google Search Console — DNS TXT record or file upload:
+
+```
+1. User enters their URL
+2. SITERANK AI: "Add this TXT record to your DNS
+                 or upload this file to your root directory"
+3. Once verified → CMS Connect unlocked
+4. AI applies fixes via WordPress / Shopify / Webflow API
+```
+
+### What's Legal & What's Not
+
+```
+✅ LEGAL — what SITERANK AI does:
+   Analyze any public website (same as Google's crawler)
+   Report findings and generate fix recommendations
+   Apply fixes via owner-authorized CMS API
+
+✅ LEGAL — the agency model:
+   Ahrefs, SEMrush, Moz all analyze public sites
+   Report findings, suggest fixes, client applies them
+
+❌ NOT DONE — would be unauthorized:
+   Pushing code changes to websites without owner consent
+```
+
+### The Real Value Proposition
+
+```
+WITHOUT SITERANK AI:
+  Developer: 4 hrs manual audit + 2 hrs writing fixes + 1 hr client report
+  = 7 hours work
+
+WITH SITERANK AI:
+  Paste URL → 30 seconds
+  Get full audit + exact fix code + client-ready PDF
+  = 30 seconds
+```
+
+The AI eliminates the research and writing time. The owner always applies the fix. That's the correct, legal, trusted model.
 
 ---
 
@@ -593,9 +925,66 @@ Authorization: Bearer <your_token>
 | `POST` | `/api/speed/analyze` | Run speed analysis |
 | `POST` | `/api/content/analyze` | Run content analysis |
 | `POST` | `/api/competitors/detect` | Auto-detect competitors |
-| `POST` | `/api/chatbot` | Chat with AI assistant |
+| `POST` | `/api/chatbot` | Chat with AI assistant (legacy) |
 | `GET` | `/api/dashboard/stats` | Dashboard statistics |
 | `GET` | `/api/health` | Health check |
+
+#### RankBot Chat Endpoint
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/chat` | MCP-powered agentic chat with tool-use loop |
+
+**Request body:**
+```json
+{
+  "message": "Analyze https://example.com and compare with hubspot.com",
+  "history": []
+}
+```
+
+**Response:**
+```json
+{
+  "reply": "Your site scores 81/100 vs HubSpot's 94/100. Main gap is schema markup…",
+  "tool_calls": ["analyze_seo", "compare_competitors"]
+}
+```
+
+#### One-Click Implementation Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/implement/seo` | Generate complete SEO fix code |
+| `POST` | `/api/implement/speed` | Generate complete speed fix code |
+| `POST` | `/api/implement/content` | Rewrite content sections with AI |
+
+**Request body:**
+```json
+{
+  "url": "https://example.com",
+  "issues": ["missing_meta_description", "no_schema", "title_too_long"],
+  "target_keyword": "SEO analysis tool"
+}
+```
+
+**Response:**
+```json
+{
+  "fixes": [
+    {
+      "issue": "missing_meta_description",
+      "status": "implemented",
+      "file": "index.html",
+      "placement": "Inside <head>",
+      "before": null,
+      "after": "<meta name='description' content='...' />",
+      "action_label": "Copy & Paste into <head>",
+      "estimated_impact": "+8 SEO points"
+    }
+  ]
+}
+```
 
 ### Example Requests
 
@@ -655,6 +1044,12 @@ You will also need:
 - NVIDIA API Key (for DeepSeek Chat)
 - OpenAI API Key (for optimization suggestions)
 - Emergent LLM Key (for unified AI access)
+- Anthropic API Key (for RankBot + One-Click Implementation Engine)
+
+#### Required Python Packages
+```bash
+pip install httpx beautifulsoup4 textstat anthropic fastmcp
+```
 
 ### Installation
 
@@ -682,6 +1077,7 @@ JWT_SECRET="your-secret-key"
 NVIDIA_API_KEY="your-nvidia-key"
 NVIDIA_BASE_URL="https://integrate.api.nvidia.com/v1"
 EMERGENT_LLM_KEY="your-emergent-key"
+ANTHROPIC_API_KEY="your-anthropic-key"   # required for RankBot + AI fixes
 ```
 
 #### 4. Frontend Setup
@@ -703,11 +1099,15 @@ REACT_APP_BACKEND_URL=http://localhost:8001
 # Terminal 1 — MongoDB
 mongod
 
-# Terminal 2 — Backend
+# Terminal 2 — Backend (main FastAPI)
 cd backend
 uvicorn server:app --host 0.0.0.0 --port 8001 --reload
 
-# Terminal 3 — Frontend
+# Terminal 3 — MCP Server (RankBot tool layer)
+cd backend
+python mcpserver.py
+
+# Terminal 4 — Frontend
 cd frontend
 yarn start
 ```
@@ -731,17 +1131,22 @@ Visit **http://localhost:3000** in your browser.
 - [x] Speed metrics analyzer
 - [x] Content score engine
 - [x] AI chat assistant (DeepSeek)
-- [x] MCP Server integration
+- [x] MCP Server integration (`mcpserver.py` via FastMCP)
+- [x] RankBot — MCP-powered agentic chatbot with tool-use loop
+- [x] One-click AI implementation engine (`/api/implement/*`)
+- [x] Role-based trust model (Owner / Agency / Researcher)
 - [x] Responsive dark theme UI
 
 ### Phase 2 — Growth Features 🔄 In Progress
 
-- [ ] PDF report generation
+- [ ] PDF report generation & client-ready export
 - [ ] Email notifications
 - [ ] Continuous monitoring
 - [ ] User settings page
 - [ ] Light/dark mode toggle
 - [ ] Multi-language support
+- [ ] Patch file download (`.patch` via `git apply`)
+- [ ] Ownership verification (DNS TXT record / file upload)
 
 ### Phase 3 — Agency Features 📋 Planned
 
@@ -751,6 +1156,7 @@ Visit **http://localhost:3000** in your browser.
 - [ ] Bulk analysis
 - [ ] Team collaboration tools
 - [ ] Custom branding
+- [ ] CMS direct-apply (WordPress / Shopify / Webflow OAuth)
 
 ### Phase 4 — Enterprise Features 🔮 Future
 
@@ -760,6 +1166,7 @@ Visit **http://localhost:3000** in your browser.
 - [ ] SLA guarantees
 - [ ] Dedicated support
 - [ ] On-premise deployment
+- [ ] GitHub PR integration (AI opens pull requests with fixes)
 
 ---
 
