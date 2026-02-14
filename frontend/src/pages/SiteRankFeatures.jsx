@@ -548,20 +548,20 @@ export default function SiteRankFeatures() {
   if (step === "role") return (
     <div className="srf-container">
       <style>{css}</style>
-      <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,position:"relative",overflow:"hidden" }}>
+      <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"24px 16px",position:"relative",overflow:"hidden" }}>
         {/* Grid bg */}
         <div style={{ position:"fixed",inset:0,backgroundImage:`linear-gradient(var(--bd) 1px,transparent 1px),linear-gradient(90deg,var(--bd) 1px,transparent 1px)`,backgroundSize:"44px 44px",opacity:0.25,pointerEvents:"none" }}/>
         {/* Glow */}
-        <div style={{ position:"fixed",top:"20%",left:"50%",transform:"translateX(-50%)",width:400,height:200,background:"radial-gradient(ellipse, rgba(78,240,232,0.06) 0%, transparent 70%)",pointerEvents:"none" }}/>
+        <div className="srf-hide-mobile" style={{ position:"fixed",top:"20%",left:"50%",transform:"translateX(-50%)",width:400,height:200,background:"radial-gradient(ellipse, rgba(78,240,232,0.06) 0%, transparent 70%)",pointerEvents:"none" }}/>
 
         <div style={{ maxWidth:540,width:"100%",position:"relative",animation:"srfFadeUp 0.5s ease" }}>
           {/* Pill */}
-          <div style={{ textAlign:"center",marginBottom:36 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:20,fontSize:9,color:"var(--cyan)",letterSpacing:"0.12em",marginBottom:22 }}>◆ SITERANK AI</div>
-            <h1 style={{ fontFamily:"var(--display)",fontSize:28,fontWeight:800,color:"var(--text)",lineHeight:1.2,marginBottom:12 }}>
+          <div style={{ textAlign:"center",marginBottom:"clamp(20px, 5vw, 36px)" }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:20,fontSize:9,color:"var(--cyan)",letterSpacing:"0.12em",marginBottom:"clamp(14px, 3vw, 22px)" }}>◆ SITERANK AI</div>
+            <h1 style={{ fontFamily:"var(--display)",fontSize:"clamp(22px, 5vw, 28px)",fontWeight:800,color:"var(--text)",lineHeight:1.2,marginBottom:12 }}>
               Who is this site for?
             </h1>
-            <p style={{ fontSize:11,color:"var(--text2)",lineHeight:1.7 }}>
+            <p style={{ fontSize:"clamp(10px, 2.5vw, 11px)",color:"var(--text2)",lineHeight:1.7,padding:"0 8px" }}>
               Your relationship determines what we show you.<br/>
               <span style={{ color:"var(--text3)" }}>Audit is always public data. Fixes go to the right person.</span>
             </p>
@@ -569,26 +569,26 @@ export default function SiteRankFeatures() {
 
           <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
             {ROLES.map((r, i) => (
-              <button key={r.id} className="srf-role-card" data-testid={`role-card-${r.id}`}
+              <button key={r.id} className="srf-role-card srf-mobile-wrap" data-testid={`role-card-${r.id}`}
                 onClick={() => { setRole(r.id); setStep("url"); }}
                 style={{
-                  display:"flex",alignItems:"center",gap:14,padding:"16px 18px",
+                  display:"flex",alignItems:"center",gap:"clamp(10px, 2vw, 14px)",padding:"clamp(12px, 3vw, 16px) clamp(12px, 3vw, 18px)",
                   background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10,
                   cursor:"pointer",textAlign:"left",fontFamily:"var(--mono)",
                   transition:"all 0.2s",animation:`srfFadeUp 0.4s ease ${i*90}ms both`,
                   "--hover-c": r.color
                 }}>
-                <div style={{ width:42,height:42,borderRadius:8,flexShrink:0,background:`${r.color}10`,border:`1px solid ${r.color}25`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:19 }}>{r.icon}</div>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:13,fontWeight:600,color:"var(--text)",marginBottom:3 }}>{r.title}</div>
-                  <div style={{ fontSize:10,color:"var(--text2)" }}>{r.desc}</div>
+                <div style={{ width:"clamp(36px, 8vw, 42px)",height:"clamp(36px, 8vw, 42px)",borderRadius:8,flexShrink:0,background:`${r.color}10`,border:`1px solid ${r.color}25`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(16px, 4vw, 19px)" }}>{r.icon}</div>
+                <div style={{ flex:1,minWidth:0 }}>
+                  <div style={{ fontSize:"clamp(11px, 2.5vw, 13px)",fontWeight:600,color:"var(--text)",marginBottom:3 }}>{r.title}</div>
+                  <div className="srf-hide-mobile" style={{ fontSize:10,color:"var(--text2)" }}>{r.desc}</div>
                 </div>
-                <div style={{ fontSize:8,fontWeight:700,letterSpacing:"0.07em",padding:"3px 8px",borderRadius:3,background:`${r.color}12`,color:r.color,border:`1px solid ${r.color}25`,flexShrink:0,textAlign:"right" }}>{r.badge}</div>
+                <div style={{ fontSize:"clamp(7px, 1.5vw, 8px)",fontWeight:700,letterSpacing:"0.07em",padding:"3px 8px",borderRadius:3,background:`${r.color}12`,color:r.color,border:`1px solid ${r.color}25`,flexShrink:0,textAlign:"right",whiteSpace:"nowrap" }}>{r.badge}</div>
               </button>
             ))}
           </div>
 
-          <p style={{ textAlign:"center",marginTop:18,fontSize:9,color:"var(--text3)",letterSpacing:"0.04em" }}>
+          <p style={{ textAlign:"center",marginTop:18,fontSize:9,color:"var(--text3)",letterSpacing:"0.04em",padding:"0 8px" }}>
             All analysis uses publicly accessible data only. No credentials required.
           </p>
         </div>
