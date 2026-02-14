@@ -26,6 +26,25 @@ const css = `
   .srf-tab-btn:hover{color:var(--text) !important}
   .srf-fix-card:hover .srf-fix-header{background:var(--s2) !important}
   .srf-copy-btn:hover{background:var(--s2) !important}
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .srf-role-card:hover{transform:none !important}
+    .srf-hide-mobile{display:none !important}
+    .srf-mobile-col{flex-direction:column !important}
+    .srf-mobile-wrap{flex-wrap:wrap !important}
+    .srf-mobile-full{width:100% !important;max-width:100% !important}
+    .srf-mobile-gap{gap:8px !important}
+    .srf-mobile-p{padding:12px !important}
+    .srf-mobile-text-sm{font-size:10px !important}
+    .srf-tabs-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .srf-tabs-scroll::-webkit-scrollbar{display:none}
+  }
+  @media (max-width: 480px) {
+    .srf-mobile-xs-col{flex-direction:column !important}
+    .srf-mobile-xs-center{align-items:center !important;text-align:center !important}
+    .srf-mobile-xs-gap{gap:6px !important}
+  }
 `;
 
 // — Utils —
