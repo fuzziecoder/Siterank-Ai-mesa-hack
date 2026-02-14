@@ -142,7 +142,10 @@ Build an AI Website Competitor Analyzer that transforms from a reporting tool in
   - [x] Research: Competitive Intelligence insights
 
 ### P1 (Next)
+- [ ] WordPress CMS Connect for verified site owners
+- [ ] GitHub PR Integration for code fixes
 - [ ] Solutions pages upgrade (multi-client dashboard for agencies)
+- [ ] Real-time API integration for Smart Analysis (currently uses demo fallback)
 - [ ] AI Support Agent in Resources
 - [ ] Export optimization blueprint to PDF
 
