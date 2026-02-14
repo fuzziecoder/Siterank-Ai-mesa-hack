@@ -626,7 +626,7 @@ export default function SiteRankFeatures() {
           </p>
 
           {/* URL Input */}
-          <div className="srf-mobile-col" style={{ display:"flex",gap:8,padding:"6px 6px 6px 14px",background:"var(--s1)",border:`1px solid ${urlFocused ? selectedRole.color+"50" : "var(--bd)"}`,borderRadius:8,transition:"border 0.2s, box-shadow 0.2s",boxShadow:urlFocused ? `0 0 0 3px ${selectedRole.color}0d` : "none" }}>
+          <div className="srf-url-input-wrap" style={{ display:"flex",gap:8,padding:"6px 6px 6px 14px",background:"var(--s1)",border:`1px solid ${urlFocused ? selectedRole.color+"50" : "var(--bd)"}`,borderRadius:8,transition:"border 0.2s, box-shadow 0.2s",boxShadow:urlFocused ? `0 0 0 3px ${selectedRole.color}0d` : "none" }}>
             <div style={{ display:"flex",alignItems:"center",gap:8,flex:1,minWidth:0 }}>
               <span style={{ color:"var(--text3)",fontSize:12,display:"flex",alignItems:"center",flexShrink:0 }}>$</span>
               <input value={urlInput} onChange={e=>setUrlInput(e.target.value)}
@@ -634,10 +634,10 @@ export default function SiteRankFeatures() {
                 onFocus={()=>setUrlFocused(true)} onBlur={()=>setUrlFocused(false)}
                 placeholder="yourwebsite.com" autoFocus
                 data-testid="url-input"
-                style={{ flex:1,background:"none",border:"none",outline:"none",color:"var(--text)",fontSize:"clamp(12px, 3vw, 14px)",fontFamily:"var(--mono)",minWidth:0,width:"100%" }}/>
+                style={{ flex:1,background:"none",border:"none",outline:"none",color:"var(--text)",fontSize:"clamp(14px, 4vw, 16px)",fontFamily:"var(--mono)",minWidth:0,width:"100%",padding:"8px 0" }}/>
             </div>
             <button onClick={startAnalysis} disabled={!urlInput.trim()} data-testid="analyze-btn"
-              style={{ padding:"10px 16px",background:urlInput.trim()?selectedRole.color:"var(--s3)",color:urlInput.trim()?"var(--bg)":"var(--text3)",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:urlInput.trim()?"pointer":"not-allowed",fontFamily:"var(--mono)",letterSpacing:"0.06em",transition:"all 0.2s",whiteSpace:"nowrap",width:"100%",maxWidth:"none" }}>
+              style={{ padding:"12px 20px",background:urlInput.trim()?selectedRole.color:"var(--s3)",color:urlInput.trim()?"var(--bg)":"var(--text3)",border:"none",borderRadius:6,fontSize:12,fontWeight:700,cursor:urlInput.trim()?"pointer":"not-allowed",fontFamily:"var(--mono)",letterSpacing:"0.06em",transition:"all 0.2s",whiteSpace:"nowrap" }}>
               ANALYZE →
             </button>
           </div>
