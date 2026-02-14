@@ -748,21 +748,21 @@ export default function SiteRankFeatures() {
 
               {/* — Issues — */}
               {currentData.issues?.length > 0 && (
-                <div style={{ padding:18,background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10 }}>
-                  <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14 }}>
-                    <h3 style={{ fontSize:9,color:"var(--text2)",letterSpacing:"0.09em" }}>ISSUES FOUND ({currentData.issues.length})</h3>
+                <div style={{ padding:"clamp(12px, 3vw, 18px)",background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10 }}>
+                  <div className="srf-mobile-col srf-mobile-gap" style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,gap:12 }}>
+                    <h3 style={{ fontSize:9,color:"var(--text2)",letterSpacing:"0.09em",whiteSpace:"nowrap" }}>ISSUES FOUND ({currentData.issues.length})</h3>
 
                     {/* CTA based on role */}
                     {role === "research" ? (
-                      <Badge type="warn" text="INTELLIGENCE MODE — VIEW ONLY"/>
+                      <Badge type="warn" text="VIEW ONLY"/>
                     ) : !currentFixes && !isGeneratingFix ? (
                       <button onClick={() => generateFixes(activeTab)} data-testid="generate-fixes-btn"
-                        style={{ display:"flex",alignItems:"center",gap:7,padding:"8px 14px",background:activeTabCfg.color,color:"var(--bg)",border:"none",borderRadius:6,fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.06em" }}>
+                        style={{ display:"flex",alignItems:"center",gap:7,padding:"10px 16px",background:activeTabCfg.color,color:"var(--bg)",border:"none",borderRadius:6,fontSize:"clamp(9px, 2vw, 10px)",fontWeight:700,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.06em",whiteSpace:"nowrap",width:"100%",maxWidth:"none",justifyContent:"center" }}>
                         ⚡ GENERATE AI FIXES
                       </button>
                     ) : isGeneratingFix ? (
                       <div style={{ display:"flex",alignItems:"center",gap:8,fontSize:10,color:activeTabCfg.color }}>
-                        <Spin color={activeTabCfg.color}/> GENERATING FIXES...
+                        <Spin color={activeTabCfg.color}/> <span className="srf-hide-mobile">GENERATING</span> FIXES...
                       </div>
                     ) : (
                       <Badge type="pass" text={`${currentFixes.length} FIXES READY`}/>
@@ -771,11 +771,11 @@ export default function SiteRankFeatures() {
 
                   <div style={{ display:"flex",flexDirection:"column",gap:6 }}>
                     {currentData.issues.map((issue,i) => (
-                      <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:10,padding:"10px 12px",background:"var(--s2)",border:"1px solid var(--bd)",borderRadius:6,animation:`srfSlideIn 0.3s ease ${i*50}ms both` }}>
+                      <div key={i} className="srf-mobile-wrap" style={{ display:"flex",alignItems:"flex-start",gap:"clamp(6px, 2vw, 10px)",padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 12px)",background:"var(--s2)",border:"1px solid var(--bd)",borderRadius:6,animation:`srfSlideIn 0.3s ease ${i*50}ms both` }}>
                         <span style={{ color:"var(--rose)",fontSize:11,flexShrink:0,marginTop:1 }}>✕</span>
-                        <div style={{ flex:1 }}>
-                          <div style={{ fontSize:11,color:"var(--text)",marginBottom:issue.detail?3:0 }}>{issue.title||issue}</div>
-                          {issue.detail && <div style={{ fontSize:10,color:"var(--text2)" }}>{issue.detail}</div>}
+                        <div style={{ flex:1,minWidth:0 }}>
+                          <div style={{ fontSize:"clamp(10px, 2.5vw, 11px)",color:"var(--text)",marginBottom:issue.detail?3:0,wordBreak:"break-word" }}>{issue.title||issue}</div>
+                          {issue.detail && <div className="srf-hide-mobile" style={{ fontSize:10,color:"var(--text2)" }}>{issue.detail}</div>}
                         </div>
                         {issue.impact && <span style={{ fontSize:9,color:"var(--rose)",flexShrink:0,fontWeight:600 }}>{issue.impact}</span>}
                       </div>
@@ -789,19 +789,19 @@ export default function SiteRankFeatures() {
                 <div style={{ animation:"srfFadeUp 0.4s ease" }} data-testid="fixes-section">
                   {/* Role context banner */}
                   {role === "owner" && (
-                    <div style={{ padding:"10px 14px",marginBottom:12,background:"var(--green-d)",border:"1px solid rgba(74,222,128,0.2)",borderRadius:7,fontSize:11,color:"var(--green)" }}>
-                      🏠 <strong>Owner Mode:</strong> Copy each fix and paste into your CMS or code. Every fix includes exact placement instructions.
+                    <div style={{ padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 14px)",marginBottom:12,background:"var(--green-d)",border:"1px solid rgba(74,222,128,0.2)",borderRadius:7,fontSize:"clamp(9px, 2vw, 11px)",color:"var(--green)" }}>
+                      🏠 <strong>Owner Mode:</strong> Copy each fix and paste into your CMS or code.
                     </div>
                   )}
                   {role === "agency" && (
-                    <div style={{ padding:"10px 14px",marginBottom:12,background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:7,fontSize:11,color:"var(--cyan)" }}>
-                      📋 <strong>Agency Mode:</strong> Share these fixes with your client's dev team. Use "Export Report" above to generate a PDF.
+                    <div style={{ padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 14px)",marginBottom:12,background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:7,fontSize:"clamp(9px, 2vw, 11px)",color:"var(--cyan)" }}>
+                      📋 <strong>Agency Mode:</strong> Share fixes with client. Use "Export" for PDF.
                     </div>
                   )}
 
-                  <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:12 }}>
-                    <div style={{ width:6,height:6,borderRadius:"50%",background:"var(--green)",boxShadow:"0 0 10px var(--green)",animation:"srfGlow 2s ease-in-out infinite" }}/>
-                    <h3 style={{ fontSize:9,color:"var(--green)",letterSpacing:"0.09em" }}>AI FIX PACKAGE — {currentFixes.length} FIXES GENERATED</h3>
+                  <div className="srf-mobile-wrap" style={{ display:"flex",alignItems:"center",gap:8,marginBottom:12 }}>
+                    <div style={{ width:6,height:6,borderRadius:"50%",background:"var(--green)",boxShadow:"0 0 10px var(--green)",animation:"srfGlow 2s ease-in-out infinite",flexShrink:0 }}/>
+                    <h3 style={{ fontSize:9,color:"var(--green)",letterSpacing:"0.09em" }}>AI FIX PACKAGE — {currentFixes.length} FIXES</h3>
                   </div>
 
                   <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
@@ -812,16 +812,16 @@ export default function SiteRankFeatures() {
 
               {/* — Competitive Intelligence (Research mode) — */}
               {role === "research" && currentData.intelligence && (
-                <div style={{ padding:18,background:"var(--s1)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:10,animation:"srfFadeUp 0.4s ease" }} data-testid="intelligence-section">
+                <div style={{ padding:"clamp(12px, 3vw, 18px)",background:"var(--s1)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:10,animation:"srfFadeUp 0.4s ease" }} data-testid="intelligence-section">
                   <h3 style={{ fontSize:9,color:"var(--cyan)",letterSpacing:"0.09em",marginBottom:14 }}>◆ COMPETITIVE INTELLIGENCE</h3>
                   <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
                     {currentData.intelligence.map((item,i) => (
-                      <div key={i} style={{ padding:"10px 12px",background:"var(--s2)",borderRadius:6,borderLeft:"2px solid var(--cyan)",fontSize:11,color:"var(--text)",animation:`srfSlideIn 0.3s ease ${i*70}ms both` }}>
+                      <div key={i} style={{ padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 12px)",background:"var(--s2)",borderRadius:6,borderLeft:"2px solid var(--cyan)",fontSize:"clamp(10px, 2.5vw, 11px)",color:"var(--text)",animation:`srfSlideIn 0.3s ease ${i*70}ms both`,wordBreak:"break-word" }}>
                         <span style={{ color:"var(--cyan)",marginRight:8 }}>→</span>{item}
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop:12,padding:"10px 14px",background:"var(--amber-d)",border:"1px solid rgba(255,181,71,0.2)",borderRadius:7,fontSize:11,color:"var(--amber)" }}>
+                  <div style={{ marginTop:12,padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 14px)",background:"var(--amber-d)",border:"1px solid rgba(255,181,71,0.2)",borderRadius:7,fontSize:"clamp(9px, 2vw, 11px)",color:"var(--amber)" }}>
                     💡 Use these insights to improve <strong>your own site</strong> — not theirs.
                   </div>
                 </div>
