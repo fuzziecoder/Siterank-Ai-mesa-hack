@@ -115,14 +115,14 @@ function Code({ code, lang = "html" }) {
   const [copied, setCopied] = useState(false);
   return (
     <div style={{ background:"#050810",border:"1px solid var(--bd)",borderRadius:6,overflow:"hidden" }}>
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 12px",borderBottom:"1px solid var(--bd)",background:"rgba(255,255,255,0.015)" }}>
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 12px",borderBottom:"1px solid var(--bd)",background:"rgba(255,255,255,0.015)",flexWrap:"wrap",gap:8 }}>
         <span style={{ fontSize:9,color:"var(--text3)",letterSpacing:"0.08em" }}>{lang.toUpperCase()}</span>
         <button className="srf-copy-btn" onClick={() => { navigator.clipboard.writeText(code); setCopied(true); setTimeout(()=>setCopied(false),2000); }}
-          style={{ padding:"2px 10px",background:"var(--s3)",color:copied?"var(--green)":"var(--text2)",border:`1px solid ${copied?"var(--green)30":"var(--bd)"}`,borderRadius:4,fontSize:9,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.05em",transition:"all 0.2s" }}>
+          style={{ padding:"4px 12px",background:"var(--s3)",color:copied?"var(--green)":"var(--text2)",border:`1px solid ${copied?"var(--green)30":"var(--bd)"}`,borderRadius:4,fontSize:10,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.05em",transition:"all 0.2s" }}>
           {copied ? "✓ COPIED" : "COPY"}
         </button>
       </div>
-      <pre style={{ padding:"12px 14px",fontSize:10,lineHeight:1.75,overflowX:"auto",color:"var(--text)",margin:0,fontFamily:"var(--mono)" }}>{code}</pre>
+      <pre style={{ padding:"12px 14px",fontSize:11,lineHeight:1.75,overflowX:"auto",color:"var(--text)",margin:0,fontFamily:"var(--mono)",whiteSpace:"pre-wrap",wordBreak:"break-word" }}>{code}</pre>
     </div>
   );
 }
@@ -133,11 +133,11 @@ function FixCard({ fix, i }) {
   const ic = fix.impact === "HIGH" ? "var(--rose)" : fix.impact === "MED" ? "var(--amber)" : "var(--cyan)";
   return (
     <div className="srf-fix-card" style={{ border:"1px solid var(--bd)",borderRadius:8,overflow:"hidden",background:"var(--s1)",animation:`srfFadeUp 0.35s ease ${i*70}ms both` }}>
-      <div className="srf-fix-header" onClick={()=>setOpen(!open)} style={{ display:"flex",alignItems:"center",gap:12,padding:"13px 16px",cursor:"pointer",transition:"background 0.15s",background:open?"var(--s2)":"transparent" }}>
+      <div className="srf-fix-header srf-mobile-wrap" onClick={()=>setOpen(!open)} style={{ display:"flex",alignItems:"center",gap:12,padding:"13px 16px",cursor:"pointer",transition:"background 0.15s",background:open?"var(--s2)":"transparent" }}>
         <div style={{ width:26,height:26,borderRadius:5,flexShrink:0,background:fix.status==="ready"?"var(--green-d)":"var(--amber-d)",border:`1px solid ${fix.status==="ready"?"rgba(74,222,128,0.3)":"rgba(255,181,71,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:fix.status==="ready"?"var(--green)":"var(--amber)" }}>{fix.status==="ready"?"✓":"⚡"}</div>
         <div style={{ flex:1,minWidth:0 }}>
-          <div style={{ fontSize:12,fontWeight:600,color:"var(--text)",marginBottom:2 }}>{fix.title}</div>
-          <div style={{ fontSize:10,color:"var(--text2)" }}>{fix.description}</div>
+          <div style={{ fontSize:12,fontWeight:600,color:"var(--text)",marginBottom:2,wordBreak:"break-word" }}>{fix.title}</div>
+          <div className="srf-hide-mobile" style={{ fontSize:10,color:"var(--text2)" }}>{fix.description}</div>
         </div>
         <div style={{ display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
           <span style={{ fontSize:8,fontWeight:700,letterSpacing:"0.07em",padding:"2px 7px",borderRadius:3,background:`${ic}15`,color:ic,border:`1px solid ${ic}30` }}>{fix.impact}</span>
