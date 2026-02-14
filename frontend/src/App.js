@@ -21,6 +21,7 @@ import SmartAnalyzePage from './pages/SmartAnalyzePage';
 import MySiteAnalysisPage from './pages/MySiteAnalysisPage';
 import ClientSiteAnalysisPage from './pages/ClientSiteAnalysisPage';
 import CompetitorAnalysisPage from './pages/CompetitorAnalysisPage';
+import SiteRankFeatures from './pages/SiteRankFeatures';
 // Solution Pages
 import ForMarketersPage from './pages/ForMarketersPage';
 import ForAgenciesPage from './pages/ForAgenciesPage';
