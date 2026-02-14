@@ -1,7 +1,8 @@
 # SITERANK AI - AI-Powered Website Competitor Analyzer
 
 <p align="center">
-  <img src="public/bot-icon.png" alt="SITERANK AI Logo" width="120" height="120"/>
+  <img src="<img width="277" height="277" alt="yuu49tcl_image-removebg-preview" src="https://github.com/user-attachments/assets/2a9db1c4-f989-42cf-a933-672977ea65b9" />
+" alt="SITERANK AI Logo" width="120" height="120"/>
 </p>
 
 <p align="center">
