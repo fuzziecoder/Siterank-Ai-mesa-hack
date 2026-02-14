@@ -73,7 +73,7 @@ const ShinyText = ({
   return (
     <motion.span
       ref={containerRef}
-      className={`relative inline-block ${className}`}
+      className={`relative inline-block whitespace-nowrap ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
