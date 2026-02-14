@@ -130,14 +130,70 @@ function Code({ code, lang = "html" }) {
   );
 }
 
-// — Fix Card —
-function FixCard({ fix, i }) {
+// — Fix Card with Implementation —
+function FixCard({ fix, i, url, onImplement }) {
   const [open, setOpen] = useState(i === 0);
+  const [implementing, setImplementing] = useState(false);
+  const [implementation, setImplementation] = useState(null);
+  const [implCopied, setImplCopied] = useState({});
+  
   const ic = fix.impact === "HIGH" ? "var(--rose)" : fix.impact === "MED" ? "var(--amber)" : "var(--cyan)";
+  
+  const handleImplement = async () => {
+    setImplementing(true);
+    try {
+      // Determine fix type from title
+      let fixType = "content";
+      const titleLower = fix.title.toLowerCase();
+      if (titleLower.includes("meta") || titleLower.includes("title") || titleLower.includes("description")) {
+        fixType = "meta_tags";
+      } else if (titleLower.includes("schema") || titleLower.includes("json-ld") || titleLower.includes("structured")) {
+        fixType = "schema";
+      } else if (titleLower.includes("alt") || titleLower.includes("image")) {
+        fixType = "alt_tags";
+      } else if (titleLower.includes("link") || titleLower.includes("internal")) {
+        fixType = "internal_links";
+      } else if (titleLower.includes("speed") || titleLower.includes("cache") || titleLower.includes("script") || titleLower.includes("render")) {
+        fixType = "speed";
+      } else if (titleLower.includes("h1") || titleLower.includes("heading") || titleLower.includes("content") || titleLower.includes("word")) {
+        fixType = "content";
+      }
+      
+      const response = await fetch(`${API_URL}/api/implement/${fixType}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: url,
+          suggestion_id: `fix-${i}`,
+          title: fix.title,
+          description: fix.explanation || fix.description || fix.title,
+          current_value: fix.code || null,
+          target_keyword: null,
+          business_type: "website"
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setImplementation(data);
+      }
+    } catch (err) {
+      console.error("Implementation failed:", err);
+    } finally {
+      setImplementing(false);
+    }
+  };
+  
+  const copyImpl = (idx, code) => {
+    navigator.clipboard.writeText(code);
+    setImplCopied({ ...implCopied, [idx]: true });
+    setTimeout(() => setImplCopied({ ...implCopied, [idx]: false }), 2000);
+  };
+  
   return (
     <div className="srf-fix-card" style={{ border:"1px solid var(--bd)",borderRadius:8,overflow:"hidden",background:"var(--s1)",animation:`srfFadeUp 0.35s ease ${i*70}ms both` }}>
       <div className="srf-fix-header srf-mobile-wrap" onClick={()=>setOpen(!open)} style={{ display:"flex",alignItems:"center",gap:12,padding:"13px 16px",cursor:"pointer",transition:"background 0.15s",background:open?"var(--s2)":"transparent" }}>
-        <div style={{ width:26,height:26,borderRadius:5,flexShrink:0,background:fix.status==="ready"?"var(--green-d)":"var(--amber-d)",border:`1px solid ${fix.status==="ready"?"rgba(74,222,128,0.3)":"rgba(255,181,71,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:fix.status==="ready"?"var(--green)":"var(--amber)" }}>{fix.status==="ready"?"✓":"⚡"}</div>
+        <div style={{ width:26,height:26,borderRadius:5,flexShrink:0,background:implementation?"var(--green-d)":fix.status==="ready"?"var(--green-d)":"var(--amber-d)",border:`1px solid ${implementation?"rgba(74,222,128,0.3)":fix.status==="ready"?"rgba(74,222,128,0.3)":"rgba(255,181,71,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:implementation?"var(--green)":fix.status==="ready"?"var(--green)":"var(--amber)" }}>{implementation?"✓":fix.status==="ready"?"✓":"⚡"}</div>
         <div style={{ flex:1,minWidth:0 }}>
           <div style={{ fontSize:12,fontWeight:600,color:"var(--text)",marginBottom:2,wordBreak:"break-word" }}>{fix.title}</div>
           <div className="srf-hide-mobile" style={{ fontSize:10,color:"var(--text2)" }}>{fix.description}</div>
@@ -150,7 +206,71 @@ function FixCard({ fix, i }) {
       {open && (
         <div style={{ padding:"0 16px 16px",borderTop:"1px solid var(--bd)",paddingTop:14,animation:"srfFadeUp 0.2s ease" }}>
           {fix.explanation && <p style={{ fontSize:11,color:"var(--text2)",lineHeight:1.7,marginBottom:12 }}>{fix.explanation}</p>}
-          {fix.code && <Code code={fix.code} lang={fix.lang||"html"} />}
+          
+          {/* IMPLEMENT NOW Button */}
+          {!implementation && !implementing && (
+            <button onClick={(e) => { e.stopPropagation(); handleImplement(); }} 
+              style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:"12px 16px",marginBottom:12,background:"linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%)",color:"#000",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.05em",transition:"all 0.2s",boxShadow:"0 4px 15px rgba(78,240,232,0.3)" }}>
+              ⚡ IMPLEMENT NOW — Generate Production Code
+            </button>
+          )}
+          
+          {/* Implementing Spinner */}
+          {implementing && (
+            <div style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:"12px 16px",marginBottom:12,background:"var(--s2)",border:"1px solid var(--cyan)30",borderRadius:8 }}>
+              <Spin color="var(--cyan)" />
+              <span style={{ fontSize:11,color:"var(--cyan)" }}>AI is generating production-ready code...</span>
+            </div>
+          )}
+          
+          {/* Implementation Results */}
+          {implementation && (
+            <div style={{ marginBottom:12,animation:"srfFadeUp 0.3s ease" }}>
+              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:12,padding:"10px 14px",background:"var(--green-d)",border:"1px solid rgba(74,222,128,0.3)",borderRadius:6 }}>
+                <span style={{ fontSize:14 }}>✓</span>
+                <span style={{ fontSize:11,color:"var(--green)",fontWeight:600 }}>IMPLEMENTED — {implementation.implementations?.length || 1} code block(s) generated</span>
+              </div>
+              
+              {implementation.implementations?.map((impl, idx) => (
+                <div key={idx} style={{ marginBottom:10,border:"1px solid var(--bd)",borderRadius:8,overflow:"hidden",background:"var(--s2)" }}>
+                  <div style={{ padding:"10px 14px",borderBottom:"1px solid var(--bd)",background:"var(--s3)" }}>
+                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8 }}>
+                      <div>
+                        <span style={{ fontSize:10,color:"var(--cyan)",fontWeight:600 }}>{impl.file}</span>
+                        <span style={{ fontSize:10,color:"var(--text3)",marginLeft:8 }}>→ {impl.placement}</span>
+                      </div>
+                      <span style={{ fontSize:9,color:"var(--green)",fontWeight:600 }}>{impl.estimated_impact}</span>
+                    </div>
+                  </div>
+                  
+                  {impl.before && (
+                    <div style={{ padding:"8px 14px",borderBottom:"1px solid var(--bd)",background:"rgba(255,107,107,0.05)" }}>
+                      <div style={{ fontSize:9,color:"var(--rose)",marginBottom:4,letterSpacing:"0.05em" }}>BEFORE (remove this):</div>
+                      <pre style={{ fontSize:10,color:"var(--text2)",margin:0,whiteSpace:"pre-wrap",wordBreak:"break-word",fontFamily:"var(--mono)" }}>{impl.before}</pre>
+                    </div>
+                  )}
+                  
+                  <div style={{ padding:"8px 14px",background:"rgba(74,222,128,0.05)" }}>
+                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4 }}>
+                      <span style={{ fontSize:9,color:"var(--green)",letterSpacing:"0.05em" }}>AFTER (copy this):</span>
+                      <button onClick={() => copyImpl(idx, impl.after)}
+                        style={{ padding:"4px 10px",background:implCopied[idx]?"var(--green)":"var(--s3)",color:implCopied[idx]?"#000":"var(--text2)",border:`1px solid ${implCopied[idx]?"var(--green)":"var(--bd)"}`,borderRadius:4,fontSize:9,cursor:"pointer",fontFamily:"var(--mono)",transition:"all 0.2s" }}>
+                        {implCopied[idx] ? "✓ COPIED!" : "📋 COPY"}
+                      </button>
+                    </div>
+                    <pre style={{ fontSize:10,color:"var(--text)",margin:0,whiteSpace:"pre-wrap",wordBreak:"break-word",fontFamily:"var(--mono)",background:"#050810",padding:10,borderRadius:4,border:"1px solid var(--bd)" }}>{impl.after}</pre>
+                  </div>
+                  
+                  <div style={{ padding:"8px 14px",borderTop:"1px solid var(--bd)",background:"var(--cyan-d)" }}>
+                    <span style={{ fontSize:10,color:"var(--cyan)" }}>📌 {impl.action_label}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Original fix code if no implementation yet */}
+          {!implementation && fix.code && <Code code={fix.code} lang={fix.lang||"html"} />}
           {fix.instructions && <div style={{ marginTop:10,padding:"10px 12px",background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.15)",borderRadius:6,fontSize:11,color:"var(--cyan)" }}>📌 {fix.instructions}</div>}
           {fix.cms_note && <div style={{ marginTop:8,padding:"10px 12px",background:"var(--violet-d)",border:"1px solid rgba(167,139,250,0.2)",borderRadius:6,fontSize:11,color:"var(--violet)" }}>📌 CMS: {fix.cms_note}</div>}
         </div>
