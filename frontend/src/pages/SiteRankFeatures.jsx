@@ -26,6 +26,28 @@ const css = `
   .srf-tab-btn:hover{color:var(--text) !important}
   .srf-fix-card:hover .srf-fix-header{background:var(--s2) !important}
   .srf-copy-btn:hover{background:var(--s2) !important}
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .srf-role-card:hover{transform:none !important}
+    .srf-hide-mobile{display:none !important}
+    .srf-mobile-col{flex-direction:column !important}
+    .srf-mobile-wrap{flex-wrap:wrap !important}
+    .srf-mobile-full{width:100% !important;max-width:100% !important}
+    .srf-mobile-gap{gap:8px !important}
+    .srf-mobile-p{padding:12px !important}
+    .srf-mobile-text-sm{font-size:10px !important}
+    .srf-tabs-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .srf-tabs-scroll::-webkit-scrollbar{display:none}
+    .srf-url-input-wrap{flex-direction:column !important;padding:12px !important}
+    .srf-url-input-wrap input{width:100% !important;padding:10px 0 !important}
+    .srf-url-input-wrap button{width:100% !important;margin-top:8px !important}
+  }
+  @media (max-width: 480px) {
+    .srf-mobile-xs-col{flex-direction:column !important}
+    .srf-mobile-xs-center{align-items:center !important;text-align:center !important}
+    .srf-mobile-xs-gap{gap:6px !important}
+  }
 `;
 
 // — Utils —
@@ -96,14 +118,14 @@ function Code({ code, lang = "html" }) {
   const [copied, setCopied] = useState(false);
   return (
     <div style={{ background:"#050810",border:"1px solid var(--bd)",borderRadius:6,overflow:"hidden" }}>
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 12px",borderBottom:"1px solid var(--bd)",background:"rgba(255,255,255,0.015)" }}>
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 12px",borderBottom:"1px solid var(--bd)",background:"rgba(255,255,255,0.015)",flexWrap:"wrap",gap:8 }}>
         <span style={{ fontSize:9,color:"var(--text3)",letterSpacing:"0.08em" }}>{lang.toUpperCase()}</span>
         <button className="srf-copy-btn" onClick={() => { navigator.clipboard.writeText(code); setCopied(true); setTimeout(()=>setCopied(false),2000); }}
-          style={{ padding:"2px 10px",background:"var(--s3)",color:copied?"var(--green)":"var(--text2)",border:`1px solid ${copied?"var(--green)30":"var(--bd)"}`,borderRadius:4,fontSize:9,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.05em",transition:"all 0.2s" }}>
+          style={{ padding:"4px 12px",background:"var(--s3)",color:copied?"var(--green)":"var(--text2)",border:`1px solid ${copied?"var(--green)30":"var(--bd)"}`,borderRadius:4,fontSize:10,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.05em",transition:"all 0.2s" }}>
           {copied ? "✓ COPIED" : "COPY"}
         </button>
       </div>
-      <pre style={{ padding:"12px 14px",fontSize:10,lineHeight:1.75,overflowX:"auto",color:"var(--text)",margin:0,fontFamily:"var(--mono)" }}>{code}</pre>
+      <pre style={{ padding:"12px 14px",fontSize:11,lineHeight:1.75,overflowX:"auto",color:"var(--text)",margin:0,fontFamily:"var(--mono)",whiteSpace:"pre-wrap",wordBreak:"break-word" }}>{code}</pre>
     </div>
   );
 }
@@ -114,11 +136,11 @@ function FixCard({ fix, i }) {
   const ic = fix.impact === "HIGH" ? "var(--rose)" : fix.impact === "MED" ? "var(--amber)" : "var(--cyan)";
   return (
     <div className="srf-fix-card" style={{ border:"1px solid var(--bd)",borderRadius:8,overflow:"hidden",background:"var(--s1)",animation:`srfFadeUp 0.35s ease ${i*70}ms both` }}>
-      <div className="srf-fix-header" onClick={()=>setOpen(!open)} style={{ display:"flex",alignItems:"center",gap:12,padding:"13px 16px",cursor:"pointer",transition:"background 0.15s",background:open?"var(--s2)":"transparent" }}>
+      <div className="srf-fix-header srf-mobile-wrap" onClick={()=>setOpen(!open)} style={{ display:"flex",alignItems:"center",gap:12,padding:"13px 16px",cursor:"pointer",transition:"background 0.15s",background:open?"var(--s2)":"transparent" }}>
         <div style={{ width:26,height:26,borderRadius:5,flexShrink:0,background:fix.status==="ready"?"var(--green-d)":"var(--amber-d)",border:`1px solid ${fix.status==="ready"?"rgba(74,222,128,0.3)":"rgba(255,181,71,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:fix.status==="ready"?"var(--green)":"var(--amber)" }}>{fix.status==="ready"?"✓":"⚡"}</div>
         <div style={{ flex:1,minWidth:0 }}>
-          <div style={{ fontSize:12,fontWeight:600,color:"var(--text)",marginBottom:2 }}>{fix.title}</div>
-          <div style={{ fontSize:10,color:"var(--text2)" }}>{fix.description}</div>
+          <div style={{ fontSize:12,fontWeight:600,color:"var(--text)",marginBottom:2,wordBreak:"break-word" }}>{fix.title}</div>
+          <div className="srf-hide-mobile" style={{ fontSize:10,color:"var(--text2)" }}>{fix.description}</div>
         </div>
         <div style={{ display:"flex",alignItems:"center",gap:8,flexShrink:0 }}>
           <span style={{ fontSize:8,fontWeight:700,letterSpacing:"0.07em",padding:"2px 7px",borderRadius:3,background:`${ic}15`,color:ic,border:`1px solid ${ic}30` }}>{fix.impact}</span>
@@ -404,7 +426,7 @@ export default function SiteRankFeatures() {
     const token = getAuthToken();
     
     try {
-      let result;
+      let fixesResult = [];
       try {
         const res = await fetch(`${API_URL}/api/fix/${type}`, {
           method: "POST", 
@@ -419,9 +441,28 @@ export default function SiteRankFeatures() {
             current_data: data
           })
         });
-        if (!res.ok) throw new Error();
-        result = await res.json();
-        setFixes(f => ({ ...f, [type]: result.fixes || [] }));
+        if (!res.ok) throw new Error(`API returned ${res.status}`);
+        const result = await res.json();
+        
+        // Transform API response format to match UI component format
+        fixesResult = (result.fixes || []).map(fix => ({
+          title: fix.issue || fix.title || "Fix",
+          description: fix.placement || fix.section || "",
+          impact: (fix.impact && fix.impact.includes("CTR")) ? "HIGH" : 
+                  (fix.impact && fix.impact.includes("20")) ? "MED" : "HIGH",
+          status: "ready",
+          explanation: fix.impact || "",
+          code: fix.fixed_code || fix.code || "",
+          lang: fix.config_type || (fix.fixed_code?.includes("<script") ? "json" : "html"),
+          instructions: fix.instructions || "",
+          cms_note: fix.effort === "copy-paste" ? "This is a simple copy-paste fix" : fix.effort || ""
+        }));
+        
+        if (fixesResult.length > 0) {
+          setFixes(f => ({ ...f, [type]: fixesResult }));
+        } else {
+          throw new Error("No fixes returned");
+        }
       } catch (err) {
         console.log('Using demo fixes for', type, err);
         await new Promise(r => setTimeout(r, 1800));
@@ -510,20 +551,20 @@ export default function SiteRankFeatures() {
   if (step === "role") return (
     <div className="srf-container">
       <style>{css}</style>
-      <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,position:"relative",overflow:"hidden" }}>
+      <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"24px 16px",position:"relative",overflow:"hidden" }}>
         {/* Grid bg */}
         <div style={{ position:"fixed",inset:0,backgroundImage:`linear-gradient(var(--bd) 1px,transparent 1px),linear-gradient(90deg,var(--bd) 1px,transparent 1px)`,backgroundSize:"44px 44px",opacity:0.25,pointerEvents:"none" }}/>
         {/* Glow */}
-        <div style={{ position:"fixed",top:"20%",left:"50%",transform:"translateX(-50%)",width:400,height:200,background:"radial-gradient(ellipse, rgba(78,240,232,0.06) 0%, transparent 70%)",pointerEvents:"none" }}/>
+        <div className="srf-hide-mobile" style={{ position:"fixed",top:"20%",left:"50%",transform:"translateX(-50%)",width:400,height:200,background:"radial-gradient(ellipse, rgba(78,240,232,0.06) 0%, transparent 70%)",pointerEvents:"none" }}/>
 
         <div style={{ maxWidth:540,width:"100%",position:"relative",animation:"srfFadeUp 0.5s ease" }}>
           {/* Pill */}
-          <div style={{ textAlign:"center",marginBottom:36 }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:20,fontSize:9,color:"var(--cyan)",letterSpacing:"0.12em",marginBottom:22 }}>◆ SITERANK AI</div>
-            <h1 style={{ fontFamily:"var(--display)",fontSize:28,fontWeight:800,color:"var(--text)",lineHeight:1.2,marginBottom:12 }}>
+          <div style={{ textAlign:"center",marginBottom:"clamp(20px, 5vw, 36px)" }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:20,fontSize:9,color:"var(--cyan)",letterSpacing:"0.12em",marginBottom:"clamp(14px, 3vw, 22px)" }}>◆ SITERANK AI</div>
+            <h1 style={{ fontFamily:"var(--display)",fontSize:"clamp(22px, 5vw, 28px)",fontWeight:800,color:"var(--text)",lineHeight:1.2,marginBottom:12 }}>
               Who is this site for?
             </h1>
-            <p style={{ fontSize:11,color:"var(--text2)",lineHeight:1.7 }}>
+            <p style={{ fontSize:"clamp(10px, 2.5vw, 11px)",color:"var(--text2)",lineHeight:1.7,padding:"0 8px" }}>
               Your relationship determines what we show you.<br/>
               <span style={{ color:"var(--text3)" }}>Audit is always public data. Fixes go to the right person.</span>
             </p>
@@ -531,26 +572,26 @@ export default function SiteRankFeatures() {
 
           <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
             {ROLES.map((r, i) => (
-              <button key={r.id} className="srf-role-card" data-testid={`role-card-${r.id}`}
+              <button key={r.id} className="srf-role-card srf-mobile-wrap" data-testid={`role-card-${r.id}`}
                 onClick={() => { setRole(r.id); setStep("url"); }}
                 style={{
-                  display:"flex",alignItems:"center",gap:14,padding:"16px 18px",
+                  display:"flex",alignItems:"center",gap:"clamp(10px, 2vw, 14px)",padding:"clamp(12px, 3vw, 16px) clamp(12px, 3vw, 18px)",
                   background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10,
                   cursor:"pointer",textAlign:"left",fontFamily:"var(--mono)",
                   transition:"all 0.2s",animation:`srfFadeUp 0.4s ease ${i*90}ms both`,
                   "--hover-c": r.color
                 }}>
-                <div style={{ width:42,height:42,borderRadius:8,flexShrink:0,background:`${r.color}10`,border:`1px solid ${r.color}25`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:19 }}>{r.icon}</div>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:13,fontWeight:600,color:"var(--text)",marginBottom:3 }}>{r.title}</div>
-                  <div style={{ fontSize:10,color:"var(--text2)" }}>{r.desc}</div>
+                <div style={{ width:"clamp(36px, 8vw, 42px)",height:"clamp(36px, 8vw, 42px)",borderRadius:8,flexShrink:0,background:`${r.color}10`,border:`1px solid ${r.color}25`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(16px, 4vw, 19px)" }}>{r.icon}</div>
+                <div style={{ flex:1,minWidth:0 }}>
+                  <div style={{ fontSize:"clamp(11px, 2.5vw, 13px)",fontWeight:600,color:"var(--text)",marginBottom:3 }}>{r.title}</div>
+                  <div className="srf-hide-mobile" style={{ fontSize:10,color:"var(--text2)" }}>{r.desc}</div>
                 </div>
-                <div style={{ fontSize:8,fontWeight:700,letterSpacing:"0.07em",padding:"3px 8px",borderRadius:3,background:`${r.color}12`,color:r.color,border:`1px solid ${r.color}25`,flexShrink:0,textAlign:"right" }}>{r.badge}</div>
+                <div style={{ fontSize:"clamp(7px, 1.5vw, 8px)",fontWeight:700,letterSpacing:"0.07em",padding:"3px 8px",borderRadius:3,background:`${r.color}12`,color:r.color,border:`1px solid ${r.color}25`,flexShrink:0,textAlign:"right",whiteSpace:"nowrap" }}>{r.badge}</div>
               </button>
             ))}
           </div>
 
-          <p style={{ textAlign:"center",marginTop:18,fontSize:9,color:"var(--text3)",letterSpacing:"0.04em" }}>
+          <p style={{ textAlign:"center",marginTop:18,fontSize:9,color:"var(--text3)",letterSpacing:"0.04em",padding:"0 8px" }}>
             All analysis uses publicly accessible data only. No credentials required.
           </p>
         </div>
@@ -564,37 +605,39 @@ export default function SiteRankFeatures() {
   if (step === "url") return (
     <div className="srf-container">
       <style>{css}</style>
-      <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24 }}>
+      <div style={{ minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"24px 16px" }}>
         <div style={{ position:"fixed",inset:0,backgroundImage:`linear-gradient(var(--bd) 1px,transparent 1px),linear-gradient(90deg,var(--bd) 1px,transparent 1px)`,backgroundSize:"44px 44px",opacity:0.25,pointerEvents:"none" }}/>
 
         <div style={{ maxWidth:500,width:"100%",animation:"srfFadeUp 0.4s ease",position:"relative" }}>
           <button onClick={() => setStep("role")} data-testid="back-to-role-btn" style={{ background:"none",border:"none",color:"var(--text2)",fontSize:10,cursor:"pointer",marginBottom:24,padding:0,fontFamily:"var(--mono)",display:"flex",alignItems:"center",gap:6,letterSpacing:"0.04em" }}>← BACK</button>
 
           {/* Role banner */}
-          <div style={{ padding:"10px 14px",marginBottom:28,background:`${selectedRole.color}08`,border:`1px solid ${selectedRole.color}25`,borderRadius:8,display:"flex",alignItems:"center",gap:10 }}>
+          <div style={{ padding:"10px 14px",marginBottom:"clamp(18px, 4vw, 28px)",background:`${selectedRole.color}08`,border:`1px solid ${selectedRole.color}25`,borderRadius:8,display:"flex",alignItems:"center",gap:10,flexWrap:"wrap" }}>
             <span style={{ fontSize:20 }}>{selectedRole.icon}</span>
-            <div>
-              <div style={{ fontSize:11,fontWeight:600,color:selectedRole.color,marginBottom:2 }}>{selectedRole.title}</div>
+            <div style={{ flex:1,minWidth:150 }}>
+              <div style={{ fontSize:"clamp(10px, 2.5vw, 11px)",fontWeight:600,color:selectedRole.color,marginBottom:2 }}>{selectedRole.title}</div>
               <div style={{ fontSize:9,color:"var(--text2)",letterSpacing:"0.05em" }}>{selectedRole.badge}</div>
             </div>
           </div>
 
-          <h2 style={{ fontFamily:"var(--display)",fontSize:24,fontWeight:800,color:"var(--text)",marginBottom:8 }}>Enter the website URL</h2>
-          <p style={{ fontSize:11,color:"var(--text2)",marginBottom:22,lineHeight:1.6 }}>
+          <h2 style={{ fontFamily:"var(--display)",fontSize:"clamp(20px, 5vw, 24px)",fontWeight:800,color:"var(--text)",marginBottom:8 }}>Enter the website URL</h2>
+          <p style={{ fontSize:"clamp(10px, 2.5vw, 11px)",color:"var(--text2)",marginBottom:22,lineHeight:1.6 }}>
             We'll run SEO, Speed, and Content analysis.<br/>All data comes from publicly accessible sources.
           </p>
 
           {/* URL Input */}
-          <div style={{ display:"flex",gap:8,padding:"6px 6px 6px 14px",background:"var(--s1)",border:`1px solid ${urlFocused ? selectedRole.color+"50" : "var(--bd)"}`,borderRadius:8,transition:"border 0.2s, box-shadow 0.2s",boxShadow:urlFocused ? `0 0 0 3px ${selectedRole.color}0d` : "none" }}>
-            <span style={{ color:"var(--text3)",fontSize:12,display:"flex",alignItems:"center",flexShrink:0 }}>$</span>
-            <input value={urlInput} onChange={e=>setUrlInput(e.target.value)}
-              onKeyDown={e=>e.key==="Enter"&&startAnalysis()}
-              onFocus={()=>setUrlFocused(true)} onBlur={()=>setUrlFocused(false)}
-              placeholder="https://yourwebsite.com" autoFocus
-              data-testid="url-input"
-              style={{ flex:1,background:"none",border:"none",outline:"none",color:"var(--text)",fontSize:12,fontFamily:"var(--mono)" }}/>
+          <div className="srf-url-input-wrap" style={{ display:"flex",gap:8,padding:"6px 6px 6px 14px",background:"var(--s1)",border:`1px solid ${urlFocused ? selectedRole.color+"50" : "var(--bd)"}`,borderRadius:8,transition:"border 0.2s, box-shadow 0.2s",boxShadow:urlFocused ? `0 0 0 3px ${selectedRole.color}0d` : "none" }}>
+            <div style={{ display:"flex",alignItems:"center",gap:8,flex:1,minWidth:0 }}>
+              <span style={{ color:"var(--text3)",fontSize:12,display:"flex",alignItems:"center",flexShrink:0 }}>$</span>
+              <input value={urlInput} onChange={e=>setUrlInput(e.target.value)}
+                onKeyDown={e=>e.key==="Enter"&&startAnalysis()}
+                onFocus={()=>setUrlFocused(true)} onBlur={()=>setUrlFocused(false)}
+                placeholder="yourwebsite.com" autoFocus
+                data-testid="url-input"
+                style={{ flex:1,background:"none",border:"none",outline:"none",color:"var(--text)",fontSize:"clamp(14px, 4vw, 16px)",fontFamily:"var(--mono)",minWidth:0,width:"100%",padding:"8px 0" }}/>
+            </div>
             <button onClick={startAnalysis} disabled={!urlInput.trim()} data-testid="analyze-btn"
-              style={{ padding:"9px 16px",background:urlInput.trim()?selectedRole.color:"var(--s3)",color:urlInput.trim()?"var(--bg)":"var(--text3)",border:"none",borderRadius:6,fontSize:10,fontWeight:700,cursor:urlInput.trim()?"pointer":"not-allowed",fontFamily:"var(--mono)",letterSpacing:"0.06em",transition:"all 0.2s",whiteSpace:"nowrap" }}>
+              style={{ padding:"12px 20px",background:urlInput.trim()?selectedRole.color:"var(--s3)",color:urlInput.trim()?"var(--bg)":"var(--text3)",border:"none",borderRadius:6,fontSize:12,fontWeight:700,cursor:urlInput.trim()?"pointer":"not-allowed",fontFamily:"var(--mono)",letterSpacing:"0.06em",transition:"all 0.2s",whiteSpace:"nowrap" }}>
               ANALYZE →
             </button>
           </div>
@@ -603,14 +646,14 @@ export default function SiteRankFeatures() {
           <div style={{ marginTop:20,padding:"14px 16px",background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:8 }}>
             <div style={{ fontSize:9,color:"var(--text3)",letterSpacing:"0.08em",marginBottom:10 }}>WHAT WE ANALYZE</div>
             {[
-              { icon:"🔍", label:"SEO", detail:"Meta tags, headings, schema, sitemap, canonicals" },
-              { icon:"⚡", label:"Speed", detail:"Core Web Vitals, load time, caching, scripts" },
-              { icon:"✏️", label:"Content", detail:"Word count, readability, keywords, E-E-A-T" },
+              { icon:"🔍", label:"SEO", detail:"Meta tags, headings, schema, sitemap" },
+              { icon:"⚡", label:"Speed", detail:"Core Web Vitals, load time, caching" },
+              { icon:"✏️", label:"Content", detail:"Word count, readability, keywords" },
             ].map(item => (
-              <div key={item.label} style={{ display:"flex",alignItems:"center",gap:10,marginBottom:7 }}>
+              <div key={item.label} className="srf-mobile-wrap" style={{ display:"flex",alignItems:"center",gap:"clamp(6px, 2vw, 10px)",marginBottom:7 }}>
                 <span style={{ fontSize:13 }}>{item.icon}</span>
-                <span style={{ fontSize:10,color:"var(--cyan)",fontWeight:600,minWidth:50 }}>{item.label}</span>
-                <span style={{ fontSize:10,color:"var(--text2)" }}>{item.detail}</span>
+                <span style={{ fontSize:10,color:"var(--cyan)",fontWeight:600,minWidth:45 }}>{item.label}</span>
+                <span style={{ fontSize:"clamp(9px, 2vw, 10px)",color:"var(--text2)" }}>{item.detail}</span>
               </div>
             ))}
           </div>
@@ -633,32 +676,32 @@ export default function SiteRankFeatures() {
       <div style={{ minHeight:"100vh",background:"var(--bg)" }}>
 
         {/* — Top Nav — */}
-        <div style={{ borderBottom:"1px solid var(--bd)",padding:"0 20px",background:"var(--s1)",position:"sticky",top:0,zIndex:100 }}>
-          <div style={{ maxWidth:920,margin:"0 auto",display:"flex",alignItems:"center",gap:12,height:50 }}>
+        <div style={{ borderBottom:"1px solid var(--bd)",padding:"0 12px",background:"var(--s1)",position:"sticky",top:0,zIndex:100 }}>
+          <div className="srf-mobile-wrap srf-mobile-gap" style={{ maxWidth:920,margin:"0 auto",display:"flex",alignItems:"center",gap:12,minHeight:50,padding:"8px 0" }}>
             <button onClick={()=>setStep("role")} data-testid="new-analysis-btn" style={{ background:"none",border:"none",color:"var(--text2)",fontSize:9,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.07em",flexShrink:0 }}>← NEW</button>
-            <div style={{ width:1,height:18,background:"var(--bd)" }}/>
-            <div style={{ padding:"4px 10px",background:"var(--s3)",border:"1px solid var(--bd)",borderRadius:4,fontSize:10,color:"var(--cyan)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:280 }}>{url}</div>
+            <div className="srf-hide-mobile" style={{ width:1,height:18,background:"var(--bd)" }}/>
+            <div style={{ padding:"4px 10px",background:"var(--s3)",border:"1px solid var(--bd)",borderRadius:4,fontSize:"clamp(9px, 2vw, 10px)",color:"var(--cyan)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"clamp(120px, 40vw, 280px)",flex:"1 1 auto",minWidth:0 }}>{url}</div>
             {selectedRole && (
-              <div style={{ fontSize:8,padding:"3px 8px",background:`${selectedRole.color}10`,color:selectedRole.color,border:`1px solid ${selectedRole.color}25`,borderRadius:3,letterSpacing:"0.07em",fontWeight:700,flexShrink:0 }}>
+              <div style={{ fontSize:8,padding:"3px 8px",background:`${selectedRole.color}10`,color:selectedRole.color,border:`1px solid ${selectedRole.color}25`,borderRadius:3,letterSpacing:"0.07em",fontWeight:700,flexShrink:0,whiteSpace:"nowrap" }}>
                 {selectedRole.icon} {role.toUpperCase()}
               </div>
             )}
             {role === "agency" && Object.keys(analysisData).length > 0 && (
-              <button onClick={downloadPDFReport} data-testid="export-report-btn" style={{ marginLeft:"auto",padding:"6px 12px",background:"var(--s3)",color:"var(--text2)",border:"1px solid var(--bd2)",borderRadius:5,fontSize:9,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.05em",flexShrink:0 }}>⬇ EXPORT REPORT</button>
+              <button onClick={downloadPDFReport} data-testid="export-report-btn" style={{ marginLeft:"auto",padding:"6px 12px",background:"var(--s3)",color:"var(--text2)",border:"1px solid var(--bd2)",borderRadius:5,fontSize:9,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.05em",flexShrink:0,whiteSpace:"nowrap" }}>⬇ EXPORT</button>
             )}
           </div>
         </div>
 
         {/* — Tabs — */}
-        <div style={{ borderBottom:"1px solid var(--bd)",background:"var(--s1)" }}>
-          <div style={{ maxWidth:920,margin:"0 auto",display:"flex" }}>
+        <div className="srf-tabs-scroll" style={{ borderBottom:"1px solid var(--bd)",background:"var(--s1)" }}>
+          <div style={{ maxWidth:920,margin:"0 auto",display:"flex",minWidth:"max-content" }}>
             {TABS.map(tab => {
               const d = analysisData[tab.id];
               const active = activeTab === tab.id;
               return (
                 <button key={tab.id} className="srf-tab-btn" onClick={() => switchTab(tab.id)} data-testid={`tab-${tab.id}`}
-                  style={{ padding:"13px 18px",background:"none",border:"none",borderBottom:`2px solid ${active?tab.color:"transparent"}`,color:active?tab.color:"var(--text2)",fontSize:10,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.06em",fontWeight:active?600:400,display:"flex",alignItems:"center",gap:7,transition:"all 0.2s" }}>
-                  {tab.icon} {tab.label}
+                  style={{ padding:"13px clamp(10px, 3vw, 18px)",background:"none",border:"none",borderBottom:`2px solid ${active?tab.color:"transparent"}`,color:active?tab.color:"var(--text2)",fontSize:"clamp(9px, 2vw, 10px)",cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.06em",fontWeight:active?600:400,display:"flex",alignItems:"center",gap:"clamp(4px, 1vw, 7px)",transition:"all 0.2s",whiteSpace:"nowrap" }}>
+                  {tab.icon} <span className="srf-hide-mobile">{tab.label}</span><span className="srf-show-mobile" style={{ display:"none" }}>{tab.id.toUpperCase()}</span>
                   {loading[tab.id] && <Spin color={tab.color} size={10}/>}
                   {d && !loading[tab.id] && (
                     <span style={{ fontSize:9,padding:"1px 5px",borderRadius:3,background:`${scoreColor(d.score)}18`,color:scoreColor(d.score),fontWeight:700 }}>{d.score}</span>
@@ -670,19 +713,19 @@ export default function SiteRankFeatures() {
         </div>
 
         {/* — Main Content — */}
-        <div style={{ maxWidth:920,margin:"0 auto",padding:"22px 20px 60px" }}>
+        <div style={{ maxWidth:920,margin:"0 auto",padding:"clamp(14px, 4vw, 22px) clamp(12px, 3vw, 20px) 60px" }}>
 
           {/* Loading */}
           {isLoading && (
-            <div style={{ padding:20,background:"var(--s1)",border:`1px solid ${activeTabCfg.color}25`,borderRadius:10,animation:"srfFadeUp 0.3s ease" }} data-testid="loading-indicator">
-              <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:14 }}>
+            <div style={{ padding:"clamp(14px, 3vw, 20px)",background:"var(--s1)",border:`1px solid ${activeTabCfg.color}25`,borderRadius:10,animation:"srfFadeUp 0.3s ease" }} data-testid="loading-indicator">
+              <div className="srf-mobile-wrap" style={{ display:"flex",alignItems:"center",gap:10,marginBottom:14 }}>
                 <Spin color={activeTabCfg.color}/>
-                <span style={{ fontSize:10,color:activeTabCfg.color,letterSpacing:"0.07em" }}>ANALYZING {url.replace(/https?:\/\//,"").split("/")[0]}...</span>
+                <span style={{ fontSize:"clamp(9px, 2vw, 10px)",color:activeTabCfg.color,letterSpacing:"0.07em",wordBreak:"break-word" }}>ANALYZING {url.replace(/https?:\/\//,"").split("/")[0]}...</span>
               </div>
               <div style={{ display:"flex",flexDirection:"column",gap:5 }}>
                 {logLines.map((l,i) => (
-                  <div key={i} style={{ fontSize:10,color:"var(--text2)",display:"flex",gap:8,animation:"srfSlideIn 0.25s ease" }}>
-                    <span style={{ color:activeTabCfg.color,flexShrink:0 }}>→</span>{l}
+                  <div key={i} style={{ fontSize:"clamp(9px, 2vw, 10px)",color:"var(--text2)",display:"flex",gap:8,animation:"srfSlideIn 0.25s ease" }}>
+                    <span style={{ color:activeTabCfg.color,flexShrink:0 }}>→</span><span style={{ wordBreak:"break-word" }}>{l}</span>
                   </div>
                 ))}
               </div>
@@ -694,10 +737,10 @@ export default function SiteRankFeatures() {
             <div style={{ display:"flex",flexDirection:"column",gap:14,animation:"srfFadeUp 0.4s ease" }} data-testid="analysis-results">
 
               {/* — Score Overview — */}
-              <div style={{ display:"flex",gap:16,padding:20,background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10,alignItems:"center" }}>
-                <Ring score={currentData.score}/>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:10,color:"var(--text2)",marginBottom:10 }}>
+              <div className="srf-mobile-col srf-mobile-xs-center" style={{ display:"flex",gap:"clamp(12px, 3vw, 16px)",padding:"clamp(14px, 3vw, 20px)",background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10,alignItems:"center" }}>
+                <Ring score={currentData.score} size={typeof window !== 'undefined' && window.innerWidth < 480 ? 80 : 96}/>
+                <div style={{ flex:1,width:"100%" }}>
+                  <div style={{ fontSize:"clamp(9px, 2vw, 10px)",color:"var(--text2)",marginBottom:10,wordBreak:"break-word" }}>
                     {url.replace(/https?:\/\//,"")} — <span style={{ color:activeTabCfg.color }}>{activeTabCfg.label}</span>
                   </div>
                   {currentData.sub_scores && Object.entries(currentData.sub_scores).map(([k,v],i) => (
@@ -708,21 +751,21 @@ export default function SiteRankFeatures() {
 
               {/* — Issues — */}
               {currentData.issues?.length > 0 && (
-                <div style={{ padding:18,background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10 }}>
-                  <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14 }}>
-                    <h3 style={{ fontSize:9,color:"var(--text2)",letterSpacing:"0.09em" }}>ISSUES FOUND ({currentData.issues.length})</h3>
+                <div style={{ padding:"clamp(12px, 3vw, 18px)",background:"var(--s1)",border:"1px solid var(--bd)",borderRadius:10 }}>
+                  <div className="srf-mobile-col srf-mobile-gap" style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,gap:12 }}>
+                    <h3 style={{ fontSize:9,color:"var(--text2)",letterSpacing:"0.09em",whiteSpace:"nowrap" }}>ISSUES FOUND ({currentData.issues.length})</h3>
 
                     {/* CTA based on role */}
                     {role === "research" ? (
-                      <Badge type="warn" text="INTELLIGENCE MODE — VIEW ONLY"/>
+                      <Badge type="warn" text="VIEW ONLY"/>
                     ) : !currentFixes && !isGeneratingFix ? (
                       <button onClick={() => generateFixes(activeTab)} data-testid="generate-fixes-btn"
-                        style={{ display:"flex",alignItems:"center",gap:7,padding:"8px 14px",background:activeTabCfg.color,color:"var(--bg)",border:"none",borderRadius:6,fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.06em" }}>
+                        style={{ display:"flex",alignItems:"center",gap:7,padding:"10px 16px",background:activeTabCfg.color,color:"var(--bg)",border:"none",borderRadius:6,fontSize:"clamp(9px, 2vw, 10px)",fontWeight:700,cursor:"pointer",fontFamily:"var(--mono)",letterSpacing:"0.06em",whiteSpace:"nowrap",width:"100%",maxWidth:"none",justifyContent:"center" }}>
                         ⚡ GENERATE AI FIXES
                       </button>
                     ) : isGeneratingFix ? (
                       <div style={{ display:"flex",alignItems:"center",gap:8,fontSize:10,color:activeTabCfg.color }}>
-                        <Spin color={activeTabCfg.color}/> GENERATING FIXES...
+                        <Spin color={activeTabCfg.color}/> <span className="srf-hide-mobile">GENERATING</span> FIXES...
                       </div>
                     ) : (
                       <Badge type="pass" text={`${currentFixes.length} FIXES READY`}/>
@@ -731,11 +774,11 @@ export default function SiteRankFeatures() {
 
                   <div style={{ display:"flex",flexDirection:"column",gap:6 }}>
                     {currentData.issues.map((issue,i) => (
-                      <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:10,padding:"10px 12px",background:"var(--s2)",border:"1px solid var(--bd)",borderRadius:6,animation:`srfSlideIn 0.3s ease ${i*50}ms both` }}>
+                      <div key={i} className="srf-mobile-wrap" style={{ display:"flex",alignItems:"flex-start",gap:"clamp(6px, 2vw, 10px)",padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 12px)",background:"var(--s2)",border:"1px solid var(--bd)",borderRadius:6,animation:`srfSlideIn 0.3s ease ${i*50}ms both` }}>
                         <span style={{ color:"var(--rose)",fontSize:11,flexShrink:0,marginTop:1 }}>✕</span>
-                        <div style={{ flex:1 }}>
-                          <div style={{ fontSize:11,color:"var(--text)",marginBottom:issue.detail?3:0 }}>{issue.title||issue}</div>
-                          {issue.detail && <div style={{ fontSize:10,color:"var(--text2)" }}>{issue.detail}</div>}
+                        <div style={{ flex:1,minWidth:0 }}>
+                          <div style={{ fontSize:"clamp(10px, 2.5vw, 11px)",color:"var(--text)",marginBottom:issue.detail?3:0,wordBreak:"break-word" }}>{issue.title||issue}</div>
+                          {issue.detail && <div className="srf-hide-mobile" style={{ fontSize:10,color:"var(--text2)" }}>{issue.detail}</div>}
                         </div>
                         {issue.impact && <span style={{ fontSize:9,color:"var(--rose)",flexShrink:0,fontWeight:600 }}>{issue.impact}</span>}
                       </div>
@@ -749,19 +792,19 @@ export default function SiteRankFeatures() {
                 <div style={{ animation:"srfFadeUp 0.4s ease" }} data-testid="fixes-section">
                   {/* Role context banner */}
                   {role === "owner" && (
-                    <div style={{ padding:"10px 14px",marginBottom:12,background:"var(--green-d)",border:"1px solid rgba(74,222,128,0.2)",borderRadius:7,fontSize:11,color:"var(--green)" }}>
-                      🏠 <strong>Owner Mode:</strong> Copy each fix and paste into your CMS or code. Every fix includes exact placement instructions.
+                    <div style={{ padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 14px)",marginBottom:12,background:"var(--green-d)",border:"1px solid rgba(74,222,128,0.2)",borderRadius:7,fontSize:"clamp(9px, 2vw, 11px)",color:"var(--green)" }}>
+                      🏠 <strong>Owner Mode:</strong> Copy each fix and paste into your CMS or code.
                     </div>
                   )}
                   {role === "agency" && (
-                    <div style={{ padding:"10px 14px",marginBottom:12,background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:7,fontSize:11,color:"var(--cyan)" }}>
-                      📋 <strong>Agency Mode:</strong> Share these fixes with your client's dev team. Use "Export Report" above to generate a PDF.
+                    <div style={{ padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 14px)",marginBottom:12,background:"var(--cyan-d)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:7,fontSize:"clamp(9px, 2vw, 11px)",color:"var(--cyan)" }}>
+                      📋 <strong>Agency Mode:</strong> Share fixes with client. Use "Export" for PDF.
                     </div>
                   )}
 
-                  <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:12 }}>
-                    <div style={{ width:6,height:6,borderRadius:"50%",background:"var(--green)",boxShadow:"0 0 10px var(--green)",animation:"srfGlow 2s ease-in-out infinite" }}/>
-                    <h3 style={{ fontSize:9,color:"var(--green)",letterSpacing:"0.09em" }}>AI FIX PACKAGE — {currentFixes.length} FIXES GENERATED</h3>
+                  <div className="srf-mobile-wrap" style={{ display:"flex",alignItems:"center",gap:8,marginBottom:12 }}>
+                    <div style={{ width:6,height:6,borderRadius:"50%",background:"var(--green)",boxShadow:"0 0 10px var(--green)",animation:"srfGlow 2s ease-in-out infinite",flexShrink:0 }}/>
+                    <h3 style={{ fontSize:9,color:"var(--green)",letterSpacing:"0.09em" }}>AI FIX PACKAGE — {currentFixes.length} FIXES</h3>
                   </div>
 
                   <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
@@ -772,16 +815,16 @@ export default function SiteRankFeatures() {
 
               {/* — Competitive Intelligence (Research mode) — */}
               {role === "research" && currentData.intelligence && (
-                <div style={{ padding:18,background:"var(--s1)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:10,animation:"srfFadeUp 0.4s ease" }} data-testid="intelligence-section">
+                <div style={{ padding:"clamp(12px, 3vw, 18px)",background:"var(--s1)",border:"1px solid rgba(78,240,232,0.2)",borderRadius:10,animation:"srfFadeUp 0.4s ease" }} data-testid="intelligence-section">
                   <h3 style={{ fontSize:9,color:"var(--cyan)",letterSpacing:"0.09em",marginBottom:14 }}>◆ COMPETITIVE INTELLIGENCE</h3>
                   <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
                     {currentData.intelligence.map((item,i) => (
-                      <div key={i} style={{ padding:"10px 12px",background:"var(--s2)",borderRadius:6,borderLeft:"2px solid var(--cyan)",fontSize:11,color:"var(--text)",animation:`srfSlideIn 0.3s ease ${i*70}ms both` }}>
+                      <div key={i} style={{ padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 12px)",background:"var(--s2)",borderRadius:6,borderLeft:"2px solid var(--cyan)",fontSize:"clamp(10px, 2.5vw, 11px)",color:"var(--text)",animation:`srfSlideIn 0.3s ease ${i*70}ms both`,wordBreak:"break-word" }}>
                         <span style={{ color:"var(--cyan)",marginRight:8 }}>→</span>{item}
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop:12,padding:"10px 14px",background:"var(--amber-d)",border:"1px solid rgba(255,181,71,0.2)",borderRadius:7,fontSize:11,color:"var(--amber)" }}>
+                  <div style={{ marginTop:12,padding:"clamp(8px, 2vw, 10px) clamp(10px, 2vw, 14px)",background:"var(--amber-d)",border:"1px solid rgba(255,181,71,0.2)",borderRadius:7,fontSize:"clamp(9px, 2vw, 11px)",color:"var(--amber)" }}>
                     💡 Use these insights to improve <strong>your own site</strong> — not theirs.
                   </div>
                 </div>

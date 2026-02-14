@@ -18,7 +18,7 @@ from models import (
     AnalysisCreate, AnalysisResult, AnalysisResponse, AnalysisSummary,
     WebsiteScore, CompetitorData
 )
-from auth import hash_password, verify_password, create_access_token, get_current_user
+from auth import hash_password, verify_password, create_access_token, get_current_user, get_optional_user
 from scraper import scrape_website
 from analyzer import analyze_scraped_data, compare_all
 from llm_engine import generate_ai_suggestions
@@ -524,7 +524,7 @@ async def health_check():
 @api_router.post("/seo/analyze")
 async def seo_analyze_endpoint(
     request: SEOAnalyzeRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: Optional[dict] = Depends(get_optional_user)
 ):
     """Comprehensive SEO analysis with AI-generated fixes"""
     if not request.url:
@@ -545,7 +545,7 @@ async def seo_analyze_endpoint(
 @api_router.post("/speed/analyze")
 async def speed_analyze_endpoint(
     request: SEOAnalyzeRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: Optional[dict] = Depends(get_optional_user)
 ):
     """Comprehensive speed analysis with optimization recommendations"""
     if not request.url:
@@ -566,7 +566,7 @@ async def speed_analyze_endpoint(
 @api_router.post("/content/analyze")
 async def content_analyze_endpoint(
     request: SEOAnalyzeRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: Optional[dict] = Depends(get_optional_user)
 ):
     """Comprehensive content analysis with AI enhancement suggestions"""
     if not request.url:
